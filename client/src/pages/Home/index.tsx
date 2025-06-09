@@ -39,7 +39,7 @@ const HomePage = () => {
             thousands of dental practice listings all in one place.
           </p>
           <div className="min-md:hidden max-md:my-5">
-            <ReactPlayer width={"100%"} url={HOME_YOUTUBE_LINK} />
+            <VideoEmbed />
           </div>
           <div className="text-white font-bold min-md:text-4xl text-2xl">
             <a href="/signup" className="hover:opacity-90 cursor-pointer">
@@ -54,7 +54,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="max-md:hidden">
-          <VideoEmbed/>
+          <VideoEmbed />
         </div>
       </div>
 

@@ -1,9 +1,7 @@
 import React from "react";
-import ReactPlayer from "react-player";
 import CountUp from "react-countup";
 import { HOME_TAKE_CHARGES, IMAGES, TARGET_NUMBER } from "@/constants";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { HOME_YOUTUBE_LINK } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import VideoEmbed from "@/components/EmbedVideo";
 

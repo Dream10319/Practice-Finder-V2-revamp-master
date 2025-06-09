@@ -31,7 +31,7 @@ const HomePage = () => {
       <div className="bg-primary min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-2 min-md:gap-5">
         <div>
           <h1 className="text-white font-extrabold min-md:text-6xl text-2xl min-mdleading-16">
-            Find a Dental Practice For Sale with Practice Finder
+            Find a Dental Practice For Sale with Practice MLS
           </h1>
           <p className="text-white py-11 font-normal leading-8 text-2xl max-md:hidden">
             Stop searching and start finding dental practices for sale. Search

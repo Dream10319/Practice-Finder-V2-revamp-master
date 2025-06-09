@@ -5,6 +5,7 @@ import { HOME_TAKE_CHARGES, IMAGES, TARGET_NUMBER } from "@/constants";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { HOME_YOUTUBE_LINK } from "@/constants";
 import { useNavigate } from "react-router-dom";
+import VideoEmbed from "@/components/EmbedVideo";
 
 interface HomeElementProps {
   title: string;
@@ -53,7 +54,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="max-md:hidden">
-          <ReactPlayer width={"100%"} url={HOME_YOUTUBE_LINK} />
+          <VideoEmbed/>
         </div>
       </div>
 

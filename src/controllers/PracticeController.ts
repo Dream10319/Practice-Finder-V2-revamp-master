@@ -91,6 +91,7 @@ export class PracticeController {
         id: practice.id,
         name: practice.name,
         city: practice.city,
+        details: practice.details,
         state: practice.state,
         price: practice.price,
         type: practice.type,

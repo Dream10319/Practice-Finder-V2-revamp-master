@@ -41,14 +41,10 @@ const HomePage = () => {
           </div>
           <div className="text-white font-bold min-md:text-4xl text-2xl">
             <a href="/signup" className="hover:opacity-90 cursor-pointer">
-              <span className="underline underline-offset-10 decoration-tertiary">
-                SIGN UP NOW
+              <span className="underline underline-offset-10 decoration-white text-tertiary">
+                GET STARTED NOW!
               </span>
             </a>
-            <span>
-              {" "}
-              FOR <span className="text-tertiary">FREE</span>
-            </span>
           </div>
         </div>
         <div className="max-md:hidden">

@@ -215,7 +215,7 @@ const HowMuch = () => {
             Other articles:
           </div>
           <div
-            className="text-[#32C46D] text-[30px] font-semibold cursor-pointer"
+            className="text-[#32C46D] text-2xl font-extrabold cursor-pointer"
             onClick={() => navigate("/how-to-buy")}
           >
             HOW TO BUY A DENTAL PRACTICE

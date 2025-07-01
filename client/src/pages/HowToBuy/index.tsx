@@ -1,49 +1,30 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const HowToBuy = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
   const articleRefs: any = useRef<(HTMLDivElement | null)[]>([]);
-  const location = useLocation();
   const tableRef = useRef<any>(null);
-  const { index } = location.state || {};
-
-  const handleScroll = () => {
-    const scrollPosition = window.scrollY + window.innerHeight / 3; // Adjust for middle of viewport
-
-    // Check each article's position
-    articleRefs.current.forEach((ref: any, index: number) => {
-      if (ref) {
-        const { top, bottom } = ref.getBoundingClientRect();
-        if (top <= scrollPosition && bottom >= scrollPosition) {
-          setActiveIndex(index);
-        }
-      }
-    });
-
-    if (tableRef.current) {
-      tableRef.current.style.top = `${
-        window.scrollY < 150 ? 150 - window.scrollY : 0
-      }px`; // Update the top style
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    if (index) {
-      navigateToArticle(index);
-    }
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   const navigateToArticle = (index: number) => {
     if (articleRefs.current[index]) {
       articleRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+      setActiveIndex(index);
     }
   };
+
+  useEffect(() => {
+    const stateIndex = location.state?.index;
+    if (typeof stateIndex === "number" && articleRefs.current[stateIndex]) {
+      // Allow a brief delay to ensure refs are populated
+      setTimeout(() => {
+        articleRefs.current[stateIndex]?.scrollIntoView({ behavior: "smooth" });
+        setActiveIndex(stateIndex);
+      }, 100);
+    }
+  }, [location.state]);
 
   return (
     <div className="max-w-[1024px] mx-auto flex gap-10 mt-10 max-[1044px]:px-2.5">
@@ -273,7 +254,7 @@ const HowToBuy = () => {
         </div>
       </div>
       <div
-        className="max-[768px]:hidden fixed top-[150px] right-0 w-[350px] bg-white p-1 rounded-2xl mr-2"
+        className="max-[768px]:hidden fixed top-[100px] right-0 w-[350px] bg-white p-1 rounded-2xl mr-2"
         ref={tableRef}
       >
         <div className="text-center text-[#15BC58] text-[30px] font-normal">
@@ -313,7 +294,7 @@ const HowToBuy = () => {
             ▪ Hiring a Buyer’s Representative
           </div>
         </div>
-        <div className="mt-8">
+        <div className="mt-5">
           <div className="text-[#06202D] text-[30px] font-bold">
             Other articles:
           </div>
@@ -327,13 +308,43 @@ const HowToBuy = () => {
             className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 0 } })}
           >
-            Getting Financed to Buy a Dental Practice
+            Seller's Discretionary Earnings (SDE)
           </div>
           <div
             className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 1 } })}
           >
-            Buying a Practice For Sale By Owner (FSBO)
+            Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA)
+          </div>
+          <div
+            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            onClick={() => navigate("/how-much", { state: { index: 2 } })}
+          >
+            Tangible vs. Intangible Assets
+          </div>
+          <div
+            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            onClick={() => navigate("/how-much", { state: { index: 3 } })}
+          >
+            Market Location
+          </div>
+          <div
+            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            onClick={() => navigate("/how-much", { state: { index: 4 } })}
+          >
+            Patient Base
+          </div>
+          <div
+            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            onClick={() => navigate("/how-much", { state: { index: 5 } })}
+          >
+            Overhead and Expenses
+          </div>
+          <div
+            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            onClick={() => navigate("/how-much", { state: { index: 6 } })}
+          >
+            Working With a Buyers Representative
           </div>
         </div>
       </div>

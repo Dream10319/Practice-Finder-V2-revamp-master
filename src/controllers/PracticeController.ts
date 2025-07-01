@@ -384,7 +384,7 @@ export class PracticeController {
 
       // Search for state descriptions matching the state name (case insensitive)
       const stateDescriptions = await StateDescriptions.find({
-        state: { $regex: state, $options: "i" }
+        state: { $regex: `^${state}$`, $options: "i" }
       });
       if (!stateDescriptions || stateDescriptions.length === 0) {
         return res.status(404).json({

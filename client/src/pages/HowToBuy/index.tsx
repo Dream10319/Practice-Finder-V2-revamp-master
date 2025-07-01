@@ -5,26 +5,83 @@ const HowToBuy = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
-  const articleRefs: any = useRef<(HTMLDivElement | null)[]>([]);
-  const tableRef = useRef<any>(null);
+  const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const tableRef = useRef<HTMLDivElement>(null);
 
-  const navigateToArticle = (index: number) => {
-    if (articleRefs.current[index]) {
-      articleRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
-      setActiveIndex(index);
-    }
-  };
+  // Ref to flag when a programmatic scroll (from a click) is happening.
+  const isClickScrolling = useRef(false);
+  // Ref to hold the timeout ID for detecting when scrolling has stopped.
+  const scrollTimeout = useRef<number | null>(null);
 
+  // Effect to handle scrolling when navigating from another page via location state
   useEffect(() => {
     const stateIndex = location.state?.index;
     if (typeof stateIndex === "number" && articleRefs.current[stateIndex]) {
-      // Allow a brief delay to ensure refs are populated
+      // Set the flag to true to prevent observer interference during the initial scroll
+      isClickScrolling.current = true;
       setTimeout(() => {
         articleRefs.current[stateIndex]?.scrollIntoView({ behavior: "smooth" });
         setActiveIndex(stateIndex);
       }, 100);
     }
   }, [location.state]);
+
+  // Effect to set up the Intersection Observer for tracking scroll position
+  useEffect(() => {
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      // If a click-scroll is in progress, ignore observer updates.
+      if (isClickScrolling.current) {
+        return;
+      }
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.getAttribute("data-index"));
+          setActiveIndex(index);
+        }
+      });
+    };
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-50% 0px -50% 0px", // Triggers when an element is vertically centered
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    articleRefs.current.forEach((ref) => {
+      if (ref) {
+        observer.observe(ref);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Effect to detect when scrolling has finished to re-enable the observer logic.
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+      scrollTimeout.current = window.setTimeout(() => {
+        isClickScrolling.current = false;
+      }, 100); // A 100ms debounce period
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navigateToArticle = (index: number) => {
+    // Set the flag to true before starting the scroll.
+    isClickScrolling.current = true;
+    setActiveIndex(index); // Set active index immediately on click
+
+    if (articleRefs.current[index]) {
+      articleRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="max-w-[1024px] mx-auto flex gap-10 mt-10 max-[1044px]:px-2.5">
@@ -53,11 +110,7 @@ const HowToBuy = () => {
           informed with this article. Get the guidance and confidence you need
           to move through this process of buying a dental practice!
         </div>
-        <div
-          ref={(el) => {
-            if (el) articleRefs.current[0] = el;
-          }}
-        >
+        <div ref={(el) => (articleRefs.current[0] = el)} data-index="0">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Finding the Right Dental Office For Sale
           </div>
@@ -89,11 +142,7 @@ const HowToBuy = () => {
             looking to purchase a dental practice.
           </div>
         </div>
-        <div
-          ref={(el) => {
-            if (el) articleRefs.current[1] = el;
-          }}
-        >
+        <div ref={(el) => (articleRefs.current[1] = el)} data-index="1">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             The Dental Practice Valuation
           </div>
@@ -142,11 +191,7 @@ const HowToBuy = () => {
             </span>
           </div>
         </div>
-        <div
-          ref={(el) => {
-            if (el) articleRefs.current[2] = el;
-          }}
-        >
+        <div ref={(el) => (articleRefs.current[2] = el)} data-index="2">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Build a Team of Trusted Advisors When Buying a Dental Practice
           </div>
@@ -207,20 +252,11 @@ const HowToBuy = () => {
             inside the actual physical practice itself.
           </div>
         </div>
-        <div
-          ref={(el) => {
-            if (el) articleRefs.current[3] = el;
-          }}
-        >
-          <div
-            className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl"
-            ref={(el) => {
-              if (el) articleRefs.current[3] = el;
-            }}
-          >
+        <div ref={(el) => (articleRefs.current[3] = el)} data-index="3">
+          <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Hiring a Buyer’s Representative
           </div>
-          <div>
+          <div className="mt-6"> {/* Added missing mt-6 for consistency */}
             What is a buyer's representative? By hiring one you can save you
             quite a lot of time and money when buying a dental practice. A good
             one will be very familiar with entire process of purchasing a dental
@@ -237,6 +273,7 @@ const HowToBuy = () => {
             dental practice acquisitions. They can help you avoid common
             pitfalls and challenges that you may not be privy until after the
             purchase, which is too late. They give expert advice that you can
+
             use to make the best business decisions possible. They are your
             outside source of reason and guidance without any emotional
             attachment to the location, situation, or the transaction. They are
@@ -264,7 +301,9 @@ const HowToBuy = () => {
           className="rounded-[20px] p-4 text-[#465860] flex flex-col gap-4"
           style={{ backgroundColor: "rgba(143, 143, 143, 0.2)" }}
         >
-          <h1 className="text-primary text-2xl font-extrabold">How To Buy a Practice</h1>
+          <h1 className="text-primary text-2xl font-extrabold">
+            How To Buy a Practice
+          </h1>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 0 ? "bolder" : "normal" }}
@@ -302,7 +341,7 @@ const HowToBuy = () => {
             className="text-[#32C46D] text-2xl font-extrabold cursor-pointer"
             onClick={() => navigate("/how-much")}
           >
-            HOW MUCH DO DENTAL OFFICES SEEL FOR
+            HOW MUCH DO DENTAL OFFICES SELL FOR
           </div>
           <div
             className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
@@ -314,7 +353,8 @@ const HowToBuy = () => {
             className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 1 } })}
           >
-            Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA)
+            Earnings Before Interest, Taxes, Depreciation, and Amortization
+            (EBITDA)
           </div>
           <div
             className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"

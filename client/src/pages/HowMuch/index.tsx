@@ -8,6 +8,11 @@ const HowMuch = () => {
   const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
 
+  // NEW: Ref to flag when a programmatic scroll (from a click) is happening.
+  const isClickScrolling = useRef(false);
+  // NEW: Ref to hold the timeout ID for detecting when scrolling has stopped.
+  const scrollTimeout = useRef<number | null>(null);
+
   // Effect to handle scrolling when navigating from another page via location state
   useEffect(() => {
     const stateIndex = location.state?.index;
@@ -22,6 +27,10 @@ const HowMuch = () => {
   // Effect to set up the Intersection Observer for tracking scroll position
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      // MODIFIED: If a click-scroll is in progress, ignore observer updates.
+      if (isClickScrolling.current) {
+        return;
+      }
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const index = Number(entry.target.getAttribute("data-index"));
@@ -32,7 +41,7 @@ const HowMuch = () => {
 
     const observerOptions = {
       root: null,
-      rootMargin: "-50% 0px -50% 0px", // Triggers when an element is vertically centered in the viewport
+      rootMargin: "-50% 0px -50% 0px",
       threshold: 0,
     };
 
@@ -44,16 +53,31 @@ const HowMuch = () => {
       }
     });
 
-    // Cleanup function to disconnect the observer when the component unmounts
-    return () => {
-      observer.disconnect();
+    return () => observer.disconnect();
+  }, []); // Note: Dependencies are empty, this runs once.
+
+  // NEW: Effect to detect when scrolling has finished to re-enable the observer logic.
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+      scrollTimeout.current = window.setTimeout(() => {
+        isClickScrolling.current = false;
+      }, 100); // A 100ms debounce period
     };
-  }, []); // Empty dependency array ensures this runs only once on mount
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navigateToArticle = (index: number) => {
+    // MODIFIED: Set the flag to true before starting the scroll.
+    isClickScrolling.current = true;
+    setActiveIndex(index); // Set active index immediately on click
+
     if (articleRefs.current[index]) {
       articleRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
-      setActiveIndex(index);
     }
   };
 

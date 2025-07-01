@@ -8,26 +8,13 @@ const HowMuch = () => {
   const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
 
-  // NEW: Ref to flag when a programmatic scroll (from a click) is happening.
+  // Ref to flag when a programmatic scroll is in progress.
   const isClickScrolling = useRef(false);
-  // NEW: Ref to hold the timeout ID for detecting when scrolling has stopped.
-  const scrollTimeout = useRef<number | null>(null);
 
-  // Effect to handle scrolling when navigating from another page via location state
-  useEffect(() => {
-    const stateIndex = location.state?.index;
-    if (typeof stateIndex === "number" && articleRefs.current[stateIndex]) {
-      setTimeout(() => {
-        articleRefs.current[stateIndex]?.scrollIntoView({ behavior: "smooth" });
-        setActiveIndex(stateIndex);
-      }, 100);
-    }
-  }, [location.state]);
-
-  // Effect to set up the Intersection Observer for tracking scroll position
+  // Effect to set up the Intersection Observer
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // MODIFIED: If a click-scroll is in progress, ignore observer updates.
+      // If a click/navigation scroll is happening, ignore observer updates.
       if (isClickScrolling.current) {
         return;
       }
@@ -46,40 +33,45 @@ const HowMuch = () => {
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    articleRefs.current.forEach((ref) => {
+    const refs = articleRefs.current;
+    refs.forEach((ref) => {
       if (ref) {
         observer.observe(ref);
       }
     });
 
-    return () => observer.disconnect();
-  }, []); // Note: Dependencies are empty, this runs once.
-
-  // NEW: Effect to detect when scrolling has finished to re-enable the observer logic.
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-      scrollTimeout.current = window.setTimeout(() => {
-        isClickScrolling.current = false;
-      }, 100); // A 100ms debounce period
+    return () => {
+      refs.forEach(ref => {
+        if (ref) observer.unobserve(ref);
+      });
+      observer.disconnect();
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navigateToArticle = (index: number) => {
-    // MODIFIED: Set the flag to true before starting the scroll.
-    isClickScrolling.current = true;
-    setActiveIndex(index); // Set active index immediately on click
-
+  // Centralized function to handle scrolling and state updates
+  const handleNavigation = (index: number) => {
     if (articleRefs.current[index]) {
+      isClickScrolling.current = true;
+      setActiveIndex(index);
       articleRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+
+      // After 1 second, re-enable the observer.
+      // This gives the smooth scroll animation time to finish.
+      setTimeout(() => {
+        isClickScrolling.current = false;
+      }, 1000);
     }
   };
+  
+  // Effect to handle scrolling when navigating from another page
+  useEffect(() => {
+    const stateIndex = location.state?.index;
+    if (typeof stateIndex === "number") {
+      // Use a short delay to ensure the component has rendered
+      setTimeout(() => handleNavigation(stateIndex), 100);
+    }
+  }, [location.state]);
+
 
   return (
     <div className="max-w-[1024px] mx-auto flex gap-10 mt-10 max-[1044px]:px-2.5">
@@ -413,14 +405,14 @@ const HowMuch = () => {
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 0 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(0)}
+            onClick={() => handleNavigation(0)}
           >
             ▪ Seller's Discretionary Earnings (SDE)
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 1 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(1)}
+            onClick={() => handleNavigation(1)}
           >
             ▪ Earnings Before Interest, Taxes, Depreciation, and Amortization
             (EBITDA)
@@ -428,35 +420,35 @@ const HowMuch = () => {
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 2 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(2)}
+            onClick={() => handleNavigation(2)}
           >
             ▪ Tangible vs. Intangible Assets
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 3 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(3)}
+            onClick={() => handleNavigation(3)}
           >
             ▪ Market Location
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 4 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(4)}
+            onClick={() => handleNavigation(4)}
           >
             ▪ Patient Base
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 5 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(5)}
+            onClick={() => handleNavigation(5)}
           >
             ▪ Overhead and Expenses
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 6 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(6)}
+            onClick={() => handleNavigation(6)}
           >
             ▪ Working With a Buyers Representative
           </div>
@@ -484,7 +476,7 @@ const HowMuch = () => {
             The Dental Practice Valuation
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 leading-[20px] cursor-pointer"
+            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-to-buy", { state: { index: 2 } })}
           >
             Build a Team of Trusted Advisors When Buying a Dental Practice

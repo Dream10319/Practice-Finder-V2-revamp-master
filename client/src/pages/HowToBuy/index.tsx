@@ -8,28 +8,13 @@ const HowToBuy = () => {
   const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
 
-  // Ref to flag when a programmatic scroll (from a click) is happening.
+  // Ref to flag when a programmatic scroll is in progress.
   const isClickScrolling = useRef(false);
-  // Ref to hold the timeout ID for detecting when scrolling has stopped.
-  const scrollTimeout = useRef<number | null>(null);
 
-  // Effect to handle scrolling when navigating from another page via location state
-  useEffect(() => {
-    const stateIndex = location.state?.index;
-    if (typeof stateIndex === "number" && articleRefs.current[stateIndex]) {
-      // Set the flag to true to prevent observer interference during the initial scroll
-      isClickScrolling.current = true;
-      setTimeout(() => {
-        articleRefs.current[stateIndex]?.scrollIntoView({ behavior: "smooth" });
-        setActiveIndex(stateIndex);
-      }, 100);
-    }
-  }, [location.state]);
-
-  // Effect to set up the Intersection Observer for tracking scroll position
+  // Effect to set up the Intersection Observer
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // If a click-scroll is in progress, ignore observer updates.
+      // If a click/navigation scroll is happening, ignore observer updates.
       if (isClickScrolling.current) {
         return;
       }
@@ -43,45 +28,47 @@ const HowToBuy = () => {
 
     const observerOptions = {
       root: null,
-      rootMargin: "-50% 0px -50% 0px", // Triggers when an element is vertically centered
+      rootMargin: "-50% 0px -50% 0px",
       threshold: 0,
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    articleRefs.current.forEach((ref) => {
+    const refs = articleRefs.current;
+    refs.forEach((ref) => {
       if (ref) {
         observer.observe(ref);
       }
     });
 
-    return () => observer.disconnect();
-  }, []);
-
-  // Effect to detect when scrolling has finished to re-enable the observer logic.
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-      scrollTimeout.current = window.setTimeout(() => {
-        isClickScrolling.current = false;
-      }, 100); // A 100ms debounce period
+    return () => {
+      refs.forEach(ref => {
+        if (ref) observer.unobserve(ref);
+      });
+      observer.disconnect();
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navigateToArticle = (index: number) => {
-    // Set the flag to true before starting the scroll.
-    isClickScrolling.current = true;
-    setActiveIndex(index); // Set active index immediately on click
-
+  // Centralized function to handle scrolling and state updates
+  const handleNavigation = (index: number) => {
     if (articleRefs.current[index]) {
+      isClickScrolling.current = true;
+      setActiveIndex(index);
       articleRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+
+      // After 1 second, re-enable the observer.
+      setTimeout(() => {
+        isClickScrolling.current = false;
+      }, 1000);
     }
   };
+
+  // Effect to handle scrolling when navigating from another page
+  useEffect(() => {
+    const stateIndex = location.state?.index;
+    if (typeof stateIndex === "number") {
+      setTimeout(() => handleNavigation(stateIndex), 100);
+    }
+  }, [location.state]);
 
   return (
     <div className="max-w-[1024px] mx-auto flex gap-10 mt-10 max-[1044px]:px-2.5">
@@ -256,7 +243,7 @@ const HowToBuy = () => {
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Hiring a Buyer’s Representative
           </div>
-          <div className="mt-6"> {/* Added missing mt-6 for consistency */}
+          <div className="mt-6">
             What is a buyer's representative? By hiring one you can save you
             quite a lot of time and money when buying a dental practice. A good
             one will be very familiar with entire process of purchasing a dental
@@ -307,28 +294,28 @@ const HowToBuy = () => {
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 0 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(0)}
+            onClick={() => handleNavigation(0)}
           >
             ▪ Finding the Right Dental Office
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 1 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(1)}
+            onClick={() => handleNavigation(1)}
           >
             ▪ The Dental Practice Valuation
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 2 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(2)}
+            onClick={() => handleNavigation(2)}
           >
             ▪ Build a Team of Trusted Advisors
           </div>
           <div
             className="cursor-pointer"
             style={{ fontWeight: activeIndex === 3 ? "bolder" : "normal" }}
-            onClick={() => navigateToArticle(3)}
+            onClick={() => handleNavigation(3)}
           >
             ▪ Hiring a Buyer’s Representative
           </div>

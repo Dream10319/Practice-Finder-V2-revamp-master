@@ -13,5 +13,5 @@ router.get("/states-listings-count", practiceController.GetStatesListingCount as
 router.post("/state-listings-count", practiceController.GetStateListingsCount as any);
 router.get("/likes", Auth as any, practiceController.GetLikedListings as any);
 router.get("/:id/liked-listings", Auth as any, practiceController.GetLikedListingsByUserId as any);
-
+router.post("/state-description", practiceController.GetStateDescription as any);
 export default router;

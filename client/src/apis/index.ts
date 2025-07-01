@@ -60,6 +60,7 @@ const getStatesListingsCount = () => API.get("/api/v1/practice/states-listings-c
 const getStateListingsCount = (data: any) => API.post("/api/v1/practice/state-listings-count", data);
 const getLikedListings = () => API.get("/api/v1/practice/likes");
 const getLikedListingsByUserId = (id: string) => API.get(`/api/v1/practice/${id}/liked-listings`);
+const getStateDescription = (data:any) => API.post(`/api/v1/practice/state-description`, data);
 
 // User
 const getUserList = () => API.get("/api/v1/user/list");
@@ -85,6 +86,7 @@ export const apis = {
   getStateListingsCount,
   getLikedListings,
   getLikedListingsByUserId,
+  getStateDescription,
 
   getUserList,
   activateUserById,

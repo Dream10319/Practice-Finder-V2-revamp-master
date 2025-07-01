@@ -21,6 +21,7 @@ const StatePage = () => {
   const [count, setCount] = React.useState("");
   const [areas, setAreas] = React.useState<Array<any>>([]);
   const [center, setCenter] = React.useState<any>(null);
+  const [statedescription, setDescription] = React.useState<Array<any>>([]);
 
   const GetCountryBorders = (state: string) => {
     let borders: Array<Array<ICoordinate>> = [];
@@ -91,11 +92,23 @@ const StatePage = () => {
     }
   };
 
+  const GetDescription = async (st: string) => {
+    try {
+      const response: any = await apis.getStateDescription({ state: st });
+      if (response.status) {
+        setDescription(response.payload);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   React.useEffect(() => {
     if (state) {
       GetStateCount(state);
       GetLocalAreas(state);
       GetGeoCode(state);
+      GetDescription(state);
     }
   }, [state]);
 
@@ -142,26 +155,79 @@ const StatePage = () => {
                 {count}
               </h2>
               <div className="text-lg flex flex-col gap-2 px-6 max-[480px]:text-sm max-[480px]:px-1">
-                <span>
-                  The dental practice acquisition market in Alabama is robust,
-                  with significant opportunities for both buyers and sellers.
-                  The market is characterized by
-                </span>
-                <ul className="list-disc px-5">
-                  <li>increased consolidation</li>
-                  <li>
-                    growing demand for dental services in population dense areas
-                  </li>
-                  <li>
-                    preference for practices offering comprehensive care and
-                    advanced technologies.{" "}
-                  </li>
-                </ul>
-                <span className="mt-5">
-                  Overall, the market presents a promising landscape for
-                  strategic acquisitions, driven by favorable industry trends
-                  and economic conditions.
-                </span>
+                {statedescription.length > 0 ? (
+                  <>
+                    <p>{statedescription[0].description}</p>
+
+                    {/* Professional Associations Section */}
+                    {statedescription[0].association?.length > 0 && (
+                      <div className="mt-4">
+                        <h3 className="font-semibold mb-3 text-xl">State Dental Association:</h3>
+                        <ul className="space-y-6">
+                          {statedescription[0].association.map((assoc: any) => (
+                            <li key={assoc._id} className="border-b pb-4 last:border-b-0 last:pb-0">
+                              {/* Association Name and Website */}
+                              <div className="flex items-start mb-2">
+                                <span className="mr-2 text-primary">•</span>
+                                <div>
+                                  <li key={assoc._id}>
+                                    <a
+                                      href={assoc.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline"
+                                    >
+                                      {assoc.name}
+                                    </a>
+                                  </li>
+                                </div>
+                              </div>
+
+                              {/* Contact Information Grid */}
+                              <div className="ml-6 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                                {/* Location */}
+                                {assoc.location && (
+                                  <div className="flex items-start">
+                                    <span className="mr-2 text-gray-500">📍</span>
+                                    <span>{assoc.location}</span>
+                                  </div>
+                                )}
+
+                                {/* Phone */}
+                                {assoc.phone && (
+                                  <div className="flex items-start">
+                                    <span className="mr-2 text-gray-500">📞</span>
+                                    <a
+                                      href={`tel:${assoc.phone.replace(/\D/g, '')}`}
+                                      className="hover:underline"
+                                    >
+                                      {assoc.phone}
+                                    </a>
+                                  </div>
+                                )}
+
+                                {/* Email */}
+                                {assoc.email && (
+                                  <div className="flex items-start">
+                                    <span className="mr-2 text-gray-500">✉️</span>
+                                    <a
+                                      href={`mailto:${assoc.email}`}
+                                      className="text-blue-600 hover:underline break-all"
+                                    >
+                                      {assoc.email}
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p>Loading description...</p>
+                )}
               </div>
               <a
                 className="bg-[#FF7575] py-2 px-10 w-fit text-white mx-auto rounded-full text-base font-semibold cursor-pointer hover:opacity-80"

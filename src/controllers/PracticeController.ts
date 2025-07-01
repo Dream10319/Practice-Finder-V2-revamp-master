@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Practice from "@models/Practice";
+import StateDescriptions from "@models/StateDescriptions";
 import User from "@models/User";
 import { MailgunService } from "@services/mailgun";
 import { VALIDATE_STATES } from "@constants/index";
@@ -367,6 +368,40 @@ export class PracticeController {
       return res.status(500).json({
         statu: false,
         message: "Server error, please try again later.",
+      });
+    }
+  };
+
+  GetStateDescription = async (req: Request, res: Response) => {
+    try {
+      const { state } = req.body;
+      if (!state || typeof state !== "string" || state.trim() === "") {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid or missing state name."
+        });
+      }
+
+      // Search for state descriptions matching the state name (case insensitive)
+      const stateDescriptions = await StateDescriptions.find({
+        state: { $regex: state, $options: "i" }
+      });
+      if (!stateDescriptions || stateDescriptions.length === 0) {
+        return res.status(404).json({
+          status: false,
+          message: "No state descriptions found for the given state."
+        });
+      }
+
+      return res.status(200).json({
+        status: true,
+        payload: stateDescriptions
+      });
+    } catch (err) {
+      console.error('Error fetching state description:', err);
+      return res.status(500).json({
+        status: false,
+        message: "Server error, please try again later."
       });
     }
   };

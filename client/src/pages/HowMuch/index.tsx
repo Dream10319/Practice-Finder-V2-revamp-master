@@ -7,6 +7,9 @@ const HowMuch = () => {
   const navigate = useNavigate();
   const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
+  const setArticleRef = (index: number) => (el: HTMLDivElement | null) => {
+    articleRefs.current[index] = el;
+  };
 
   // Ref to flag when a programmatic scroll is in progress.
   const isClickScrolling = useRef(false);
@@ -115,7 +118,7 @@ const HowMuch = () => {
           methods for calculating earnings and expenses reported by the
           practice.
         </div>
-        <div ref={(el) => (articleRefs.current[0] = el)} data-index="0">
+        <div ref={setArticleRef(0)} data-index="0">
           <div className="mt-8 text-[#465860] text-[36px] leading-[36px] max-[768px]:text-2xl font-extrabold">
             Seller's Discretionary Earnings (SDE)
           </div>
@@ -136,7 +139,7 @@ const HowMuch = () => {
             practice, and the perceived risk.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[1] = el)} data-index="1">
+        <div ref={setArticleRef(1)} data-index="1">
           <div className="mt-8 text-[#465860] text-[36px] leading-[40px] max-[768px]:text-2xl font-extrabold">
             Earnings Before Interest, Taxes, Depreciation, and Amortization
             (EBITDA)
@@ -158,7 +161,7 @@ const HowMuch = () => {
             achieve greater profitability post-acquisition.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[2] = el)} data-index="2">
+        <div ref={setArticleRef(2)} data-index="2">
           <div className="mt-8 text-[#465860] text-[36px] leading-[40px] max-[768px]:text-2xl font-extrabold">
             TANGIBLE vs. INTANGIBLE ASSETS
           </div>
@@ -251,7 +254,7 @@ const HowMuch = () => {
             parking are also important considerations.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[3] = el)} data-index="3">
+        <div ref={setArticleRef(3)} data-index="3">
           <div className="mt-8 text-[#465860] text-[36px] leading-[40px] max-[768px]:text-2xl font-extrabold">
             MARKET LOCATION
           </div>
@@ -284,7 +287,7 @@ const HowMuch = () => {
             significant negotiating leverage.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[4] = el)} data-index="4">
+        <div ref={setArticleRef(4)} data-index="4">
           <div className="mt-8 text-[#465860] text-[36px] leading-[40px] max-[768px]:text-2xl font-extrabold">
             PATIENT BASE
           </div>
@@ -310,7 +313,7 @@ const HowMuch = () => {
             edge when negotiating an offer on respective practice listings.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[5] = el)} data-index="5">
+        <div ref={setArticleRef(5)} data-index="5">
           <div className="mt-8 text-[#465860] text-[36px] leading-[40px] max-[768px]:text-2xl font-extrabold">
             OVERHEAD AND EXPENSES
           </div>
@@ -350,7 +353,7 @@ const HowMuch = () => {
             office sells for.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[6] = el)} data-index="6">
+        <div ref={setArticleRef(6)} data-index="6">
           <div className="mt-8 text-[#465860] text-[36px] leading-[40px] max-[768px]:text-2xl font-extrabold">
             WORKING WITH A BUYERS REPRESENTATIVE
           </div>

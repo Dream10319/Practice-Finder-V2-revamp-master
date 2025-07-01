@@ -7,7 +7,9 @@ const HowToBuy = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
-
+  const setArticleRef = (index: number) => (el: HTMLDivElement | null) => {
+    articleRefs.current[index] = el;
+  };
   // Ref to flag when a programmatic scroll is in progress.
   const isClickScrolling = useRef(false);
 
@@ -97,7 +99,7 @@ const HowToBuy = () => {
           informed with this article. Get the guidance and confidence you need
           to move through this process of buying a dental practice!
         </div>
-        <div ref={(el) => (articleRefs.current[0] = el)} data-index="0">
+        <div ref={setArticleRef(0)} data-index="0">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Finding the Right Dental Office For Sale
           </div>
@@ -129,7 +131,7 @@ const HowToBuy = () => {
             looking to purchase a dental practice.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[1] = el)} data-index="1">
+        <div ref={setArticleRef(1)} data-index="1">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             The Dental Practice Valuation
           </div>
@@ -178,7 +180,7 @@ const HowToBuy = () => {
             </span>
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[2] = el)} data-index="2">
+        <div ref={setArticleRef(2)} data-index="2">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Build a Team of Trusted Advisors When Buying a Dental Practice
           </div>
@@ -239,7 +241,7 @@ const HowToBuy = () => {
             inside the actual physical practice itself.
           </div>
         </div>
-        <div ref={(el) => (articleRefs.current[3] = el)} data-index="3">
+        <div ref={setArticleRef(3)} data-index="3">
           <div className="mt-8 text-[#465860] text-[36px] font-extrabold max-[768px]:text-2xl">
             Hiring a Buyer’s Representative
           </div>
@@ -260,7 +262,6 @@ const HowToBuy = () => {
             dental practice acquisitions. They can help you avoid common
             pitfalls and challenges that you may not be privy until after the
             purchase, which is too late. They give expert advice that you can
-
             use to make the best business decisions possible. They are your
             outside source of reason and guidance without any emotional
             attachment to the location, situation, or the transaction. They are

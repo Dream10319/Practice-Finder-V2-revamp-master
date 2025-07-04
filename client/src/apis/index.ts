@@ -41,7 +41,8 @@ API.interceptors.response.use(
 
 // Public
 const contactUs = (data: any) => API.post("/api/v1/public/contact-us", data);
-const validateNPI = (data: any) => API.post("/api/v1/public/validate-npi", data);
+const validateNPI = (data: any) =>
+  API.post("/api/v1/public/validate-npi", data);
 const checkEmail = (data: any) => API.post("/api/v1/public/check-email", data);
 
 // Auth
@@ -49,23 +50,33 @@ const signIn = (data: any) => API.post("/api/v1/auth/signin", data);
 const signUp = (data: any) => API.post("/api/v1/auth/signup", data);
 const googleAuth = (data: any) => API.post("/api/v1/auth/google", data);
 const getCurrentUser = () => API.get("/api/v1/auth/current-user");
-const changePassword = (data: any) => API.post("/api/v1/auth/change-password", data);
+const changePassword = (data: any) =>
+  API.post("/api/v1/auth/change-password", data);
 
 // Practice
 const getPracticeList = (data: any) => API.post("/api/v1/practice/list", data);
 const getPracticeById = (id: string) => API.get(`/api/v1/practice/${id}/detail`);
 const LikePractice = (id: string) => API.get(`/api/v1/practice/${id}/like`);
-const getLocalAreas = (data: any) => API.post(`/api/v1/practice/local-areas`, data); 
-const getStatesListingsCount = () => API.get("/api/v1/practice/states-listings-count");
-const getStateListingsCount = (data: any) => API.post("/api/v1/practice/state-listings-count", data);
+const getLocalAreas = (data: any) =>
+  API.post(`/api/v1/practice/local-areas`, data);
+const getStatesListingsCount = () =>
+  API.get("/api/v1/practice/states-listings-count");
+const getStateListingsCount = (data: any) =>
+  API.post("/api/v1/practice/state-listings-count", data);
 const getLikedListings = () => API.get("/api/v1/practice/likes");
-const getLikedListingsByUserId = (id: string) => API.get(`/api/v1/practice/${id}/liked-listings`);
-const getStateDescription = (data:any) => API.post(`/api/v1/practice/state-description`, data);
+const getLikedListingsByUserId = (id: string) =>
+  API.get(`/api/v1/practice/${id}/liked-listings`);
+const getStateDescription = (data: any) =>
+  API.post(`/api/v1/practice/state-description`, data);
 
 // User
 const getUserList = () => API.get("/api/v1/user/list");
 const activateUserById = (id: string) => API.get(`/api/v1/user/${id}/activate`);
-const updateUserById = (id: string, data: any) => API.patch(`/api/v1/user/${id}/update`, data);
+const updateUserById = (id: string, data: any) =>
+  API.patch(`/api/v1/user/${id}/update`, data);
+// NEW: Create and Delete User APIs
+const createUser = (data: any) => API.post("/api/v1/user/create", data);
+const deleteUserById = (id: string) => API.delete(`/api/v1/user/${id}/delete`);
 
 export const apis = {
   contactUs,
@@ -90,5 +101,7 @@ export const apis = {
 
   getUserList,
   activateUserById,
-  updateUserById
+  updateUserById,
+  createUser,
+  deleteUserById,
 };

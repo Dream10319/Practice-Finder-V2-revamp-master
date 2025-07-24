@@ -26,7 +26,7 @@ const MainFooter = () => {
         </div>
       </div>
       <div className="flex min-sm:justify-end justify-center min-sm:text-2xl text-sm text-[#465860] min-md:mt-5 mt-2">
-        All rights reserved &#169; Practice Finder {new Date().getFullYear()}
+        All rights reserved &#169; Practice MLS {new Date().getFullYear()}
       </div>
     </div>
   );

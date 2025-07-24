@@ -111,7 +111,7 @@ const SignInPage = () => {
           onSubmit={submit}
         >
           <h1 className="text-primary text-5xl font-extrabold max-md:text-2xl">
-            Login to Practice Finder
+            Login to Practice MLS
           </h1>
           <div className="flex flex-col gap-3 w-full max-w-[500px]">
             <Input type="email" placeholder="Email" required name="email" />

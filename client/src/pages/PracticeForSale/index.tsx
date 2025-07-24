@@ -45,7 +45,7 @@ const PracticeForSalePage = () => {
             <div className="flex flex-col gap-10 mx-auto max-[768px]:gap-5">
               <ul className="text-xl font-semibold flex flex-col gap-3 list-disc max-[768px]:text-sm max-[768px]:gap-1">
                 <li>Create Your Own Customized Searches</li>
-                <li>Over +3,000 Practices For Sale Nationwide</li>
+                <li>Over +1,400 Currently Practices For Sale Nationwide</li>
                 <li>Store Your Favorite Listings in One Place</li>
                 <li>Quickly Find Key Aspects of Every Practice</li>
               </ul>
@@ -81,7 +81,7 @@ const PracticeForSalePage = () => {
             Search by State
           </h1>
           <p className="text-xl max-w-[1000px] px-5 py-5 mx-auto text-primary max-[480px]:text-sm">
-            Practice Finder is working to expand the number of brokerages
+            Practice MLS is working to expand the number of brokerages
             covered in each state. Currently only 5 States are fully represented
             with major brokerages including Washington, Oregon, California,
             Arizona, and Colorado. There are still listings in the rest of the

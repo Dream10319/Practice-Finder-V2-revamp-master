@@ -68,7 +68,7 @@ const SignUpFirst = ({
           Thousands of Dental Practices For Sale
         </h1>
         <h2 className="text-primary text-4xl font-bold text-center max-[768px]:text-xl">
-          Over 3000+ listings available.
+          Over 1400+ listings available.
         </h2>
         <div className="flex items-center justify-evenly mt-10 max-[900px]:justify-between">
           <form
@@ -148,7 +148,7 @@ const SignUpFirst = ({
               Thousands of Dental Practices For Sale
             </div>
             <div className="text-sm font-semibold">
-              Over 3000+ listings all in one place.
+              Multiple Practice listings all in one place.
             </div>
           </div>
           <div>

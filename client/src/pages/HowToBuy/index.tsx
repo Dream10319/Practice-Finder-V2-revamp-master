@@ -111,7 +111,7 @@ const HowToBuy = () => {
             into consideration to know if a practice is worth pursuing and
             putting your time and energy into going through this process. This
             guide will give you some perspective on conducting a{" "}
-            <span className="text-[#32C46D] underline">
+            <span className="text-[#20AC58] underline">
               financial valuation of a dental practice for sale.
             </span>
           </div>
@@ -124,7 +124,7 @@ const HowToBuy = () => {
             in the area, travel times, and the population density. By working
             with an experienced buyer's representative or practice broker , they
             should be guiding you using a{" "}
-            <span className="text-[#32C46D] underline">
+            <span className="text-[#20AC58] underline">
               demographics analysis.
             </span>{" "}
             These studies provide valuable insights into the areas you are
@@ -158,7 +158,7 @@ const HowToBuy = () => {
           <br />
           <div>
             Ultimately, when{" "}
-            <span className="text-[#32C46D] underline">
+            <span className="text-[#20AC58] underline">
               valuing a practice for sale,
             </span>{" "}
             you want a clear picture of value by carefully looking at the cash
@@ -175,7 +175,7 @@ const HowToBuy = () => {
             liabilities in order to support you and the business moving forward.
             Also to secure financing and get favorable conditions on a loan.
             These two things are the biggest factor determining{" "}
-            <span className="text-[#32C46D] underline">
+            <span className="text-[#20AC58] underline">
               how much it costs to buy a dental practice.
             </span>
           </div>
@@ -198,7 +198,7 @@ const HowToBuy = () => {
           <br />
           <div>
             Often, a dentist will begin{" "}
-            <span className="text-[#32C46D] underline">
+            <span className="text-[#20AC58] underline">
               working with a practice broker
             </span>{" "}
             only to find out that the brokers ultimately are hired by the seller
@@ -230,7 +230,7 @@ const HowToBuy = () => {
             could hire a dental specific CPA to hep with the valuation and you
             could also hire an attorney to do the LOI review. But all these
             things need done before you can talk to the banker about{" "}
-            <span className="text-[#32C46D] underline">
+            <span className="text-[#20AC58] underline">
               getting a loan to buy a dental practice.
             </span>{" "}
             Because the banks want to look at the practice’s financial history
@@ -271,7 +271,7 @@ const HowToBuy = () => {
         <div className="my-8 text-[40px] leading-[40px] font-extrabold max-[768px]:text-2xl">
           Next article: <br />
           <span
-            className="text-[#32C46D] cursor-pointer"
+            className="text-[#20AC58] cursor-pointer"
             onClick={() => navigate("/how-much")}
           >
             HOW MUCH DO DENTAL OFFICES SELL FOR?
@@ -282,7 +282,7 @@ const HowToBuy = () => {
         className="max-[768px]:hidden fixed top-[100px] right-0 w-[350px] bg-white p-1 rounded-2xl mr-2"
         ref={tableRef}
       >
-        <div className="text-center text-[#15BC58] text-[30px] font-normal">
+        <div className="text-center text-[#20AC58] text-[30px] font-normal">
           Table of Contents
         </div>
         <div
@@ -326,50 +326,50 @@ const HowToBuy = () => {
             Other articles:
           </div>
           <div
-            className="text-[#32C46D] text-2xl font-extrabold cursor-pointer"
+            className="text-[#20AC58] text-2xl font-extrabold cursor-pointer"
             onClick={() => navigate("/how-much")}
           >
             HOW MUCH DO DENTAL OFFICES SELL FOR
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 0 } })}
           >
             Seller's Discretionary Earnings (SDE)
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 1 } })}
           >
             Earnings Before Interest, Taxes, Depreciation, and Amortization
             (EBITDA)
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 2 } })}
           >
             Tangible vs. Intangible Assets
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 3 } })}
           >
             Market Location
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 4 } })}
           >
             Patient Base
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 5 } })}
           >
             Overhead and Expenses
           </div>
           <div
-            className="text-[#32C46D] text-[20px] mt-3 cursor-pointer"
+            className="text-[#20AC58] text-[20px] mt-3 cursor-pointer"
             onClick={() => navigate("/how-much", { state: { index: 6 } })}
           >
             Working With a Buyers Representative

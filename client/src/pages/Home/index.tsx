@@ -12,7 +12,7 @@ interface HomeElementProps {
 
 const HomeElement: React.FC<HomeElementProps> = ({ title, text }) => (
   <div
-    className={`bg-primary text-white rounded-4xl min-md:p-10 p-5 flex flex-col min-md:gap-5 gap-3 min-md:w-[350px] w-[320px] min-md:m-3 m-1 cursor-pointer hover:bg-secondary`}
+    className={`bg-primary text-white rounded-4xl min-md:p-10 p-5 flex flex-col min-md:gap-5 gap-3 min-md:w-[350px] w-[320px] min-md:m-3 m-1 cursor-pointer hover:bg-[#20AC58]`}
   >
     <h2 className={`min-md:text-5xl text-4xl font-bold text-center`}>
       {title}

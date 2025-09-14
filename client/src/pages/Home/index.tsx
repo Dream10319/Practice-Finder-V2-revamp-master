@@ -14,12 +14,75 @@ const HomeElement: React.FC<HomeElementProps> = ({ title, text }) => (
   <div
     className={`bg-primary text-white rounded-4xl min-md:p-10 p-5 flex flex-col min-md:gap-5 gap-3 min-md:w-[350px] w-[320px] min-md:m-3 m-1 cursor-pointer hover:bg-[#20AC58]`}
   >
-    <h2 className={`min-md:text-5xl text-4xl font-bold text-center`}>
-      {title}
-    </h2>
+    <h2 className={`min-md:text-5xl text-4xl font-bold text-center`}>{title}</h2>
     <p>{text}</p>
   </div>
 );
+
+/** Typewriter rotating words with blinking caret */
+const RotatingTypewriter: React.FC<{
+  words: string[];
+  className?: string;
+  typingMs?: number; // per character
+  deleteMs?: number; // per character
+  holdMs?: number;   // pause when a word is fully typed
+}> = ({
+  words,
+  className = "",
+  typingMs = 90,
+  deleteMs = 50,
+  holdMs = 1000,
+}) => {
+  const [i, setI] = React.useState(0);     // which word index
+  const [sub, setSub] = React.useState(0); // number of chars shown
+  const [del, setDel] = React.useState(false); // deleting?
+
+  // caret blink (pure CSS via Tailwind classes toggled by state)
+  const [blink, setBlink] = React.useState(false);
+  React.useEffect(() => {
+    const t = setInterval(() => setBlink((b) => !b), 500);
+    return () => clearInterval(t);
+  }, []);
+
+  // reduce motion accessibility
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  // typing / deleting loop
+  React.useEffect(() => {
+    if (prefersReduced) return; // show full word without animation
+
+    const curr = words[i];
+    if (!del && sub === curr.length) {
+      const t = setTimeout(() => setDel(true), holdMs);
+      return () => clearTimeout(t);
+    }
+    if (del && sub === 0) {
+      setDel(false);
+      setI((v) => (v + 1) % words.length);
+      return;
+    }
+    const t = setTimeout(
+      () => setSub((v) => v + (del ? -1 : 1)),
+      del ? deleteMs : typingMs
+    );
+    return () => clearTimeout(t);
+  }, [sub, del, i, words, typingMs, deleteMs, holdMs, prefersReduced]);
+
+  const shown = prefersReduced ? words[i] : words[i].slice(0, sub);
+
+  return (
+    <div className={`inline-flex items-center ${className}`} aria-live="polite" aria-atomic="true">
+      <span>{shown}</span>
+      <span
+        className={`ml-1 inline-block w-[2px] h-[1.2em] bg-current align-[-0.15em] ${
+          blink ? "opacity-0" : "opacity-100"
+        }`}
+      />
+    </div>
+  );
+};
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -29,24 +92,50 @@ const HomePage = () => {
       {/* First Section */}
       <div className="bg-primary min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-2 min-md:gap-5">
         <div>
-          <h1 className="text-white font-extrabold min-md:text-6xl text-2xl min-mdleading-16">
+          <h1 className="text-white font-extrabold min-md:text-6xl text-2xl min-md:leading-16">
             Find a Dental Practice For Sale with Practice MLS
           </h1>
+
+          {/* Animated rotating words (typewriter) */}
+          <div className="mt-1">
+            <RotatingTypewriter
+              words={["Easily", "Quickly", "Confidently"]}
+              className="text-white font-bold text-6xl"
+              typingMs={90}
+              deleteMs={50}
+              holdMs={1000}
+            />
+          </div>
+
           <p className="text-white py-11 font-normal leading-8 text-2xl max-md:hidden">
-            Stop searching and start finding dental practices for sale. Search
-            thousands of dental practice listings all in one place.
+            Browse dental practice listings in your area.<br />
+            We have <span className="font-bold">+1,900</span> practices listed nationwide.<br />
+            Sign up for <span className="font-bold text-[#FAC91A]">FREE</span> and find your next dental practice!
           </p>
+
           <div className="min-md:hidden max-md:my-5">
             <VideoEmbed />
           </div>
-          <div className="text-white font-bold min-md:text-4xl text-2xl">
+
+          <div className="font-bold min-md:text-4xl text-2xl">
             <a href="/signup" className="hover:opacity-90 cursor-pointer">
-              <span className="underline underline-offset-10 decoration-white text-tertiary">
-                GET STARTED NOW!
+              <span className="inline-flex items-center gap-3 text-black bg-[#FAC91A] px-6 py-2 rounded-full">
+                Get Started Now
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
               </span>
             </a>
           </div>
         </div>
+
         <div className="max-md:hidden">
           <VideoEmbed />
         </div>
@@ -73,18 +162,14 @@ const HomePage = () => {
             className="text-white bg-[#FF7575] rounded-2xl text-md font-bold leading-8 px-3 cursor-pointer hover:opacity-75"
             onClick={() => navigate("/signup")}
           >
-            Get Start Now
+            Get Started Now
           </button>
         </div>
 
         <div className="min-md:col-span-2">
           <div className="flex justify-center items-center flex-wrap max-md:mt-2">
             {HOME_TAKE_CHARGES.map((charge: any, index: number) => (
-              <HomeElement
-                key={index}
-                title={charge.title}
-                text={charge.text}
-              />
+              <HomeElement key={index} title={charge.title} text={charge.text} />
             ))}
           </div>
         </div>
@@ -112,7 +197,7 @@ const HomePage = () => {
           className="text-white bg-[#FF7575] rounded-2xl text-md font-bold leading-8 px-3 cursor-pointer hover:opacity-75"
           onClick={() => navigate("/signup")}
         >
-          Get Start Now
+          Get Started Now
         </button>
       </div>
 
@@ -122,45 +207,26 @@ const HomePage = () => {
           The #1 Site for Searching Dental Practices for Sale Online
         </h1>
       </div>
+
       <div className="bg-[#F1F1F1] flex justify-center gap-10 py-15 max-md:hidden">
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
-          <h2 className="text-4xl text-center font-semibold">
-            Number of Practices Listed
-          </h2>
+          <h2 className="text-4xl text-center font-semibold">Number of Practices Listed</h2>
           <h1 className="text-5xl text-center font-bold">
-            <CountUp
-              end={TARGET_NUMBER.PRACTICE}
-              start={0}
-              duration={5}
-              prefix="+"
-              enableScrollSpy={true}
-            />
+            <CountUp end={TARGET_NUMBER.PRACTICE} start={0} duration={5} prefix="+" enableScrollSpy={true} />
           </h1>
         </div>
+
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
-          <h2 className="text-4xl text-center font-semibold">
-            Number of Dentists Served
-          </h2>
+          <h2 className="text-4xl text-center font-semibold">Number of Dentists Served</h2>
           <h1 className="text-5xl text-center font-bold">
-            <CountUp
-              end={TARGET_NUMBER.DENTIST}
-              start={0}
-              duration={5}
-              enableScrollSpy={true}
-            />
+            <CountUp end={TARGET_NUMBER.DENTIST} start={0} duration={5} enableScrollSpy={true} />
           </h1>
         </div>
+
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
-          <h2 className="text-4xl text-center font-semibold">
-            Become an Owner in Days
-          </h2>
+          <h2 className="text-4xl text-center font-semibold">Become an Owner in Days</h2>
           <h1 className="text-5xl text-center font-bold">
-            <CountUp
-              end={TARGET_NUMBER.OWNER}
-              start={0}
-              duration={5}
-              enableScrollSpy={true}
-            />
+            <CountUp end={TARGET_NUMBER.OWNER} start={0} duration={5} enableScrollSpy={true} />
           </h1>
         </div>
       </div>

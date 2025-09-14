@@ -14,6 +14,7 @@ import ContactUsPage from "@/pages/ContactUs";
 import SignInPage from "@/pages/SignIn";
 import SignUpPage from "@/pages/SignUp";
 import HowToBuy from "@/pages/HowToBuy";
+import AboutUs from "@/pages/AboutUs";
 import HowMuch from "@/pages/HowMuch";
 import PracticeForSalePage from "@/pages/PracticeForSale";
 import StatePage from "@/pages/State";
@@ -90,6 +91,14 @@ const AppRouter = () => {
           element={
             <MainLayout>
               <HowToBuy />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/about-us"
+          element={
+            <MainLayout>
+              <AboutUs />
             </MainLayout>
           }
         />

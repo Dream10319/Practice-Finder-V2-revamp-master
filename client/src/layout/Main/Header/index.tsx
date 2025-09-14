@@ -10,7 +10,7 @@ const MainHeader = () => {
         <LazyLoadImage
           alt="logo"
           src={IMAGES.LOGO_BIG}
-          className="min-xl:h-[90px] min-lg:h-[70px] min-md:h-[50px] h-[35px]"
+          className="min-xl:h-[50px] min-lg:h-[50px] min-md:h-[50px] h-[35px]"
         />
       </a>
       <HeaderMenu />

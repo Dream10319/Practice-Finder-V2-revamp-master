@@ -56,6 +56,10 @@ export const HEADER_MENU_ITEMS: Array<IMenuItem> = [
     label: "How to Buy a Practice",
   },
   {
+    key: "about-us",
+    label: "About Us",
+  },
+  {
     key: "signin",
     label: "Sign In",
   },

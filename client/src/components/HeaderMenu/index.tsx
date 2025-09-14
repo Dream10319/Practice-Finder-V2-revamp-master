@@ -82,6 +82,9 @@ const HeaderMenu = () => {
                 <a href="/how-to-buy">How to Buy a Practice</a>
               </li>
               <li className="text-primary hover:text-[#06202DA6] cursor-pointer">
+                <a href="/about-us">About Us</a>
+              </li>
+              <li className="text-primary hover:text-[#06202DA6] cursor-pointer">
                 <a href="/signin">Sign In</a>
               </li>
             </ul>

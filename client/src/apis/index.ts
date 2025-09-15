@@ -63,6 +63,8 @@ const getStatesListingsCount = () =>
   API.get("/api/v1/practice/states-listings-count");
 const getStateListingsCount = (data: any) =>
   API.post("/api/v1/practice/state-listings-count", data);
+const getTotalPracticeCount = () =>
+  API.get("/api/v1/practice/total-count");
 const getLikedListings = () => API.get("/api/v1/practice/likes");
 const getLikedListingsByUserId = (id: string) =>
   API.get(`/api/v1/practice/${id}/liked-listings`);
@@ -97,6 +99,7 @@ export const apis = {
   getStateListingsCount,
   getLikedListings,
   getLikedListingsByUserId,
+  getTotalPracticeCount,
   getStateDescription,
 
   getUserList,

@@ -405,4 +405,21 @@ export class PracticeController {
       });
     }
   };
+
+  GetTotalPracticeCount = async (req: Request, res: Response) => {
+    try {
+      const totalCount = await Practice.countDocuments({});
+      return res.status(200).json({
+        status: true,
+        payload: {
+          totalCount,
+        },
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: false,
+        message: "Server error, please try again later.",
+      });
+    }
+  };
 }

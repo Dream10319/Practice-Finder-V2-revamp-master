@@ -5,6 +5,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate } from "react-router-dom";
 import VideoEmbed from "@/components/EmbedVideo";
 import USMap from "@/components/Map";
+import { apis } from "@/apis";
 
 interface HomeElementProps {
   title: string;
@@ -86,6 +87,26 @@ const RotatingTypewriter: React.FC<{
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [roundedPracticeCount, setPracticeCount] = React.useState<number | null>(null);
+  const [loadingCount, setLoadingCount] = React.useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const data: any  = await apis.getTotalPracticeCount();
+        if (!cancelled && data?.status && typeof data?.payload?.totalCount === "number") {
+          setPracticeCount(Math.floor(data.payload.totalCount/100)*100);
+        }
+      } finally {
+        if (!cancelled) setLoadingCount(false);
+      }
+    };
+
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <div>
@@ -154,7 +175,18 @@ const HomePage = () => {
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
           <h2 className="text-4xl text-center font-semibold">Number of Practices Listed</h2>
           <h1 className="text-5xl text-center font-bold">
-            <CountUp end={TARGET_NUMBER.PRACTICE} start={0} duration={5} prefix="+" enableScrollSpy={true} />
+            {loadingCount ? (
+              // quick skeleton/fallback while loading
+              <span>...</span>
+            ) : (
+              <CountUp
+                end={roundedPracticeCount ?? TARGET_NUMBER.PRACTICE}
+                start={0}
+                duration={5}
+                prefix="+"
+                enableScrollSpy={true}
+              />
+            )}
           </h1>
         </div>
 

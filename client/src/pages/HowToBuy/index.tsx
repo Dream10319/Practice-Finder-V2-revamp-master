@@ -73,11 +73,16 @@ const HowToBuy = () => {
   }, [location.state]);
 
   return (
-    <div className="max-w-[1024px] mx-auto flex gap-10 mt-10 max-[1044px]:px-2.5">
+    <div className="max-w-[1280px] mx-auto flex gap-10 mt-10 max-[1044px]:px-2.5">
       <div className="text-[#06202D] right-panel">
-        <div className="text-[40px] font-extrabold max-[768px]:text-2xl">
+        <div className="text-[40px] font-extrabold max-[768px]:text-2xl text-center">
           HOW TO BUY A DENTAL PRACTICE
         </div>
+        <img
+          src="src/assets/img/hero2.jpg"
+          alt="Dental office sale"
+          className="w-full h-[300px] object-cover rounded-2xl mt-6"
+        />
         <div className="mt-3">
           Purchasing a dental practice is no small feat. Many industry experts
           will tell you it’s not that complicated. Simply follow their lead,

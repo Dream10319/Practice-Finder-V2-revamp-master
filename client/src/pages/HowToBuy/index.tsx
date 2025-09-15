@@ -279,7 +279,7 @@ const HowToBuy = () => {
         </div>
       </div>
       <div
-        className="max-[768px]:hidden fixed top-[100px] right-0 w-[350px] bg-white p-1 rounded-2xl mr-2"
+        className="max-[768px]:hidden sticky top-[100px] w-[350px] bg-white p-1 rounded-2xl self-start"
         ref={tableRef}
       >
         <div className="text-center text-[#20AC58] text-[30px] font-normal">

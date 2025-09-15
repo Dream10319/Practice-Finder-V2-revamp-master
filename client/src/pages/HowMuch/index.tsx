@@ -65,7 +65,7 @@ const HowMuch = () => {
       }, 1000);
     }
   };
-  
+
   // Effect to handle scrolling when navigating from another page
   useEffect(() => {
     const stateIndex = location.state?.index;
@@ -281,7 +281,7 @@ const HowMuch = () => {
             more social opportunities, better schools for their children,
             spousal job opportunities, and a larger patient pool. With dozens
             of potential buyers for every one practice that comes on the
--           market, a bidding war can often ensue. This intense competition
+            -           market, a bidding war can often ensue. This intense competition
             naturally drives the valuation multiples (whether SDE or EBITDA)
             and the final sale price higher. Sellers in these markets have
             significant negotiating leverage.
@@ -392,7 +392,7 @@ const HowMuch = () => {
         </div>
       </div>
       <div
-        className="max-[768px]:hidden fixed top-[100px] right-0 w-[350px] bg-white p-1 rounded-2xl mr-2"
+        className="max-[768px]:hidden sticky top-[100px] w-[350px] bg-white p-1 rounded-2xl self-start"
         ref={tableRef}
       >
         <div className="text-center text-[#15BC58] text-[30px] font-normal">

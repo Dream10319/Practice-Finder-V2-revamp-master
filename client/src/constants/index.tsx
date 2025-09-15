@@ -83,6 +83,10 @@ export const FOOTER_MENU_ITEMS: Array<IMenuItem> = [
     label: "Practices for Sale",
   },
   {
+    key: "about-us",
+    label: "About Us",
+  },
+  {
     key: "signin",
     label: "Sign In",
   },

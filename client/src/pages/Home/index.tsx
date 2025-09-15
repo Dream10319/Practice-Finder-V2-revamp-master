@@ -125,7 +125,7 @@ const HomePage = () => {
           <div className="mt-1">
             <RotatingTypewriter
               words={["Easily", "Quickly", "Confidently"]}
-              className="text-white font-bold text-6xl"
+              className="text-white font-bold min-md:text-6xl text-2xl min-md:leading-16"
               typingMs={90}
               deleteMs={50}
               holdMs={1000}
@@ -215,7 +215,7 @@ const HomePage = () => {
       </div>
 
       {/* Third section */}
-      <div className="px-5 min-md:my-15 my-8 min-md:grid min-md:grid-cols-7 min-md:gap-10 mx-auto max-w-[1440px]">
+      <div className="min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-7 min-md:gap-10 mx-auto max-w-[1440px]">
         <div className="min-md:col-span-5 flex flex-col min-md:gap-10">
           <h1 className="min-md:text-6xl min-md:leading-18 text-3xl text-primary font-extrabold">
             Access To Multiple Practice Listings on One Site
@@ -241,7 +241,7 @@ const HomePage = () => {
       </div>
 
       {/* Fourth section */}
-      <div className="px-5 min-md:my-15 my-5 min-md:grid min-md:grid-cols-3 min-md:gap-10 mx-auto max-w-[1440px]">
+      <div className="min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-3 min-md:gap-10 mx-auto max-w-[1440px]">
         <div className="flex flex-col justify-center min-md:gap-5 gap-2">
           <h1 className="min-md:text-6xl text-3xl min-md:leading-16 text-primary font-extrabold">
             Take Charge.

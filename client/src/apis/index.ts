@@ -79,6 +79,8 @@ const updateUserById = (id: string, data: any) =>
 // NEW: Create and Delete User APIs
 const createUser = (data: any) => API.post("/api/v1/user/create", data);
 const deleteUserById = (id: string) => API.delete(`/api/v1/user/${id}/delete`);
+const getUserCount = () =>
+  API.get("/api/v1/user/total-count");
 
 export const apis = {
   contactUs,
@@ -107,4 +109,5 @@ export const apis = {
   updateUserById,
   createUser,
   deleteUserById,
+  getUserCount,
 };

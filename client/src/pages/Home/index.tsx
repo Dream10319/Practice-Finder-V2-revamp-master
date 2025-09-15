@@ -87,17 +87,21 @@ const RotatingTypewriter: React.FC<{
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [roundedPracticeCount, setPracticeCount] = React.useState<number | null>(null);
+  const [practiceCount, setPracticeCount] = React.useState<number | null>(null);
+  const [userCount, setUserCount] = React.useState<number | null>(null);
   const [loadingCount, setLoadingCount] = React.useState(true);
-
+  const [roundedPracticeCount, setRoundedPracticeCount] = React.useState<number | null>(null)
   React.useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
       try {
-        const data: any  = await apis.getTotalPracticeCount();
-        if (!cancelled && data?.status && typeof data?.payload?.totalCount === "number") {
-          setPracticeCount(Math.floor(data.payload.totalCount/100)*100);
+        const pdata: any = await apis.getTotalPracticeCount();
+        const udata: any = await apis.getUserCount();
+        if (!cancelled && pdata?.status && typeof pdata?.payload?.totalCount === "number") {
+          setPracticeCount(pdata.payload.totalCount);
+          setRoundedPracticeCount(Math.floor(pdata.payload.totalCount / 100) * 100);
+          setUserCount(udata.payload.totalCount);
         }
       } finally {
         if (!cancelled) setLoadingCount(false);
@@ -130,7 +134,7 @@ const HomePage = () => {
 
           <p className="text-white py-11 font-normal leading-8 text-2xl max-md:hidden">
             Browse dental practice listings in your area.<br />
-            We have <span className="font-bold">+1,900</span> practices listed nationwide.<br />
+            We have <span className="font-bold">{practiceCount ?? TARGET_NUMBER.PRACTICE}</span> practices listed nationwide.<br />
             Sign up for <span className="font-bold text-[#FAC91A]">FREE</span> and find your next dental practice!
           </p>
 
@@ -191,9 +195,14 @@ const HomePage = () => {
         </div>
 
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
-          <h2 className="text-4xl text-center font-semibold">Number of Dentists Served</h2>
+          <h2 className="text-4xl text-center font-semibold">Number of Users & Growing</h2>
           <h1 className="text-5xl text-center font-bold">
-            <CountUp end={TARGET_NUMBER.DENTIST} start={0} duration={5} enableScrollSpy={true} />
+            {loadingCount ? (
+              // quick skeleton/fallback while loading
+              <span>...</span>
+            ) : (
+              <CountUp end={userCount ?? TARGET_NUMBER.DENTIST} start={0} duration={5} enableScrollSpy={true} />
+            )}
           </h1>
         </div>
 

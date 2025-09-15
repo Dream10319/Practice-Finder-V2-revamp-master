@@ -324,4 +324,25 @@ export class UserController {
       });
     }
   };
+
+  GetUserCount = async (req: Request, res: Response) => {
+    try {
+
+      const totalCount = await User.countDocuments({});
+
+      return res.status(200).json({
+        status: true,
+        payload: {
+          totalCount,
+        },
+      });
+    } catch (err) {
+      console.error("Error fetching user count:", err);
+      return res.status(500).json({
+        status: false,
+        message: "Server error, please try again later.",
+      });
+    }
+  };
+
 }

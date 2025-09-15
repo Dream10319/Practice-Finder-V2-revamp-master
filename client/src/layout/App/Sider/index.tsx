@@ -23,8 +23,8 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
 
   return (
     <div
-      className={`h-screen border border-[#B5B5B5] bg-white shadow-2xl transition-all duration-300 ease-in-out fixed max-[480px]:z-20 ${
-        show ? "w-[180px] ml-0" : "w-[50px] max-[480px]:w-[180x] max-[480px]:ml-[-180px]"
+      className={`h-screen border border-[#B5B5B5] bg-white shadow-2xl transition-all duration-300 ease-in-out fixed max-[480px]:z-20 py-7 ${
+        show ? "w-[180px] ml-0" : "w-[50px] max-[480px]:w-[180px] max-[480px]:ml-[-180px]"
       }`}
     >
       <div

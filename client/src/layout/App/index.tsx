@@ -11,7 +11,7 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { token } = useSelector((state: RootState) => state.auth);
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = React.useState(true);
   const location = useLocation();
 
   React.useEffect(() => {
@@ -22,11 +22,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     <Navigate to="/" replace />
   ) : (
     <div className="min-h-[100vh] bg-[#BBB] flex">
-      <AppSider show={show} setShow={setShow} />
+      <div className="py-2">
+      <AppSider show={show} setShow={setShow}/>
+      </div>
+
       <div
-        className={`${
-          show ? "ml-[180px]" : "ml-[50px]"
-        } w-full max-[480px]:ml-0`}
+        className={`${show ? "ml-[180px]" : "ml-[50px]"
+          } w-full max-[480px]:ml-0`}
       >
         <div className="w-full py-2 px-5 max-[480px]:px-2">
           <AppHeader setShow={setShow} show={show} />

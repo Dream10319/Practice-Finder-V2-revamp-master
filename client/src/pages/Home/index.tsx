@@ -7,6 +7,15 @@ import VideoEmbed from "@/components/EmbedVideo";
 import USMap from "@/components/Map";
 import { apis } from "@/apis";
 
+/**
+ * Design goals
+ * - Consistent container widths + paddings using Tailwind's container + spacing scale
+ * - Semantic <section> wrappers with even vertical rhythm (py-16 / py-24)
+ * - Aligned grids with responsive gaps
+ * - Fewer magic numbers; prefer Tailwind tokens
+ * - Mobile-first: stack, then enhance at md/lg
+ */
+
 interface HomeElementProps {
   title: string;
   text: string;
@@ -14,10 +23,10 @@ interface HomeElementProps {
 
 const HomeElement: React.FC<HomeElementProps> = ({ title, text }) => (
   <div
-    className={`bg-primary text-white rounded-4xl min-md:p-10 p-5 flex flex-col min-md:gap-5 gap-3 min-md:w-[350px] w-[320px] min-md:m-3 m-1 cursor-pointer hover:bg-[#20AC58]`}
+    className="bg-primary text-white rounded-3xl p-6 md:p-8 flex flex-col gap-3 md:gap-4 w-full sm:w-[300px] md:w-[340px] lg:w-[360px] shadow-sm hover:shadow-md transition-shadow duration-200"
   >
-    <h2 className={`min-md:text-5xl text-4xl font-bold text-center`}>{title}</h2>
-    <p>{text}</p>
+    <h3 className="text-2xl md:text-3xl font-bold text-center">{title}</h3>
+    <p className="text-sm md:text-base text-white/90 text-center">{text}</p>
   </div>
 );
 
@@ -27,70 +36,66 @@ const RotatingTypewriter: React.FC<{
   className?: string;
   typingMs?: number; // per character
   deleteMs?: number; // per character
-  holdMs?: number;   // pause when a word is fully typed
-}> = ({
-  words,
-  className = "",
-  typingMs = 90,
-  deleteMs = 50,
-  holdMs = 1000,
-}) => {
-    const [i, setI] = React.useState(0);     // which word index
-    const [sub, setSub] = React.useState(0); // number of chars shown
-    const [del, setDel] = React.useState(false); // deleting?
+  holdMs?: number; // pause when a word is fully typed
+}> = ({ words, className = "", typingMs = 90, deleteMs = 50, holdMs = 1000 }) => {
+  const [i, setI] = React.useState(0); // which word index
+  const [sub, setSub] = React.useState(0); // number of chars shown
+  const [del, setDel] = React.useState(false); // deleting?
 
-    // caret blink (pure CSS via Tailwind classes toggled by state)
-    const [blink, setBlink] = React.useState(false);
-    React.useEffect(() => {
-      const t = setInterval(() => setBlink((b) => !b), 500);
-      return () => clearInterval(t);
-    }, []);
+  // caret blink (pure CSS via Tailwind classes toggled by state)
+  const [blink, setBlink] = React.useState(false);
+  React.useEffect(() => {
+    const t = setInterval(() => setBlink((b) => !b), 500);
+    return () => clearInterval(t);
+  }, []);
 
-    // reduce motion accessibility
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  // reduce motion accessibility
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-    // typing / deleting loop
-    React.useEffect(() => {
-      if (prefersReduced) return; // show full word without animation
+  // typing / deleting loop
+  React.useEffect(() => {
+    if (prefersReduced) return; // show full word without animation
 
-      const curr = words[i];
-      if (!del && sub === curr.length) {
-        const t = setTimeout(() => setDel(true), holdMs);
-        return () => clearTimeout(t);
-      }
-      if (del && sub === 0) {
-        setDel(false);
-        setI((v) => (v + 1) % words.length);
-        return;
-      }
-      const t = setTimeout(
-        () => setSub((v) => v + (del ? -1 : 1)),
-        del ? deleteMs : typingMs
-      );
+    const curr = words[i];
+    if (!del && sub === curr.length) {
+      const t = setTimeout(() => setDel(true), holdMs);
       return () => clearTimeout(t);
-    }, [sub, del, i, words, typingMs, deleteMs, holdMs, prefersReduced]);
-
-    const shown = prefersReduced ? words[i] : words[i].slice(0, sub);
-
-    return (
-      <div className={`inline-flex items-center ${className}`} aria-live="polite" aria-atomic="true">
-        <span>{shown}</span>
-        <span
-          className={`ml-1 inline-block w-[2px] h-[1.2em] bg-current align-[-0.15em] ${blink ? "opacity-0" : "opacity-100"
-            }`}
-        />
-      </div>
+    }
+    if (del && sub === 0) {
+      setDel(false);
+      setI((v) => (v + 1) % words.length);
+      return;
+    }
+    const t = setTimeout(
+      () => setSub((v) => v + (del ? -1 : 1)),
+      del ? deleteMs : typingMs
     );
-  };
+    return () => clearTimeout(t);
+  }, [sub, del, i, words, typingMs, deleteMs, holdMs, prefersReduced]);
 
-const HomePage = () => {
+  const shown = prefersReduced ? words[i] : words[i].slice(0, sub);
+
+  return (
+    <span className={`inline-flex items-center ${className}`} aria-live="polite" aria-atomic="true">
+      <span>{shown}</span>
+      <span
+        className={`ml-1 inline-block w-[2px] h-[1.2em] bg-current align-[-0.15em] ${
+          blink ? "opacity-0" : "opacity-100"
+        }`}
+      />
+    </span>
+  );
+};
+
+const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [practiceCount, setPracticeCount] = React.useState<number | null>(null);
   const [userCount, setUserCount] = React.useState<number | null>(null);
   const [loadingCount, setLoadingCount] = React.useState(true);
-  const [roundedPracticeCount, setRoundedPracticeCount] = React.useState<number | null>(null)
+  const [roundedPracticeCount, setRoundedPracticeCount] = React.useState<number | null>(null);
+
   React.useEffect(() => {
     let cancelled = false;
 
@@ -101,7 +106,7 @@ const HomePage = () => {
         if (!cancelled && pdata?.status && typeof pdata?.payload?.totalCount === "number") {
           setPracticeCount(pdata.payload.totalCount);
           setRoundedPracticeCount(Math.floor(pdata.payload.totalCount / 100) * 100);
-          setUserCount(udata.payload.totalCount);
+          setUserCount(udata?.payload?.totalCount ?? null);
         }
       } finally {
         if (!cancelled) setLoadingCount(false);
@@ -109,72 +114,82 @@ const HomePage = () => {
     };
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
-    <div>
-      {/* First Section */}
-      <div className="bg-primary min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-2 min-md:gap-5">
-        <div>
-          <h1 className="text-white font-extrabold min-md:text-6xl text-2xl min-md:leading-16">
-            Find a Dental Practice For Sale with Practice MLS
-          </h1>
+    <main className="w-full">
+      {/* HERO */}
+      <section className="bg-primary text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="space-y-6">
+              <h1 className="font-bold text-3xl sm:text-4xl lg:text-6xl leading-tight">
+                Find a Dental Practice For Sale with Practice MLS
+              </h1>
 
-          {/* Animated rotating words (typewriter) */}
-          <div className="mt-1">
-            <RotatingTypewriter
-              words={["Easily", "Quickly", "Confidently"]}
-              className="text-white font-bold min-md:text-6xl text-2xl min-md:leading-16"
-              typingMs={90}
-              deleteMs={50}
-              holdMs={1000}
-            />
-          </div>
+              <RotatingTypewriter
+                words={["Easily", "Quickly", "Confidently"]}
+                className="font-bold text-3xl sm:text-4xl lg:text-6xl"
+              />
 
-          <p className="text-white py-11 font-normal leading-8 text-2xl max-md:hidden">
-            Browse dental practice listings in your area.<br />
-            We have <span className="font-bold">{practiceCount ?? TARGET_NUMBER.PRACTICE}</span> practices listed nationwide.<br />
-            Sign up for <span className="font-bold text-[#FAC91A]">FREE</span> and find your next dental practice!
-          </p>
+              <p className="hidden md:block text-white/95 text-xl leading-8">
+                Browse dental practice listings in your area.
+                <br />
+                We have <span className="font-bold">{practiceCount ?? TARGET_NUMBER.PRACTICE}</span> practices listed
+                nationwide.
+                <br />
+                Sign up for <span className="font-bold text-[#FAC91A]">FREE</span> and find your next dental practice!
+              </p>
 
-          <div className="min-md:hidden max-md:my-5">
-            <VideoEmbed />
-          </div>
+              <div className="md:hidden">
+                <VideoEmbed />
+              </div>
 
-          <div className="font-bold min-md:text-4xl text-2xl">
-            <a href="/signup" className="hover:opacity-90 cursor-pointer">
-              <span className="inline-flex items-center gap-3 text-black bg-[#FAC91A] px-6 py-2 rounded-full">
-                Get Started Now
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
-            </a>
+              <div>
+                <a href="/signup" className="inline-flex">
+                  <span className="inline-flex items-center gap-2 md:gap-3 text-black bg-[#FAC91A] px-5 py-2.5 md:px-7 md:py-3 rounded-full font-semibold hover:opacity-90 transition-opacity">
+                    Get Started Now
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5 md:w-6 md:h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+
+            <div className="hidden md:block">
+              <VideoEmbed />
+            </div>
           </div>
         </div>
+      </section>
 
-        <div className="max-md:hidden">
-          <VideoEmbed />
+      {/* BADGE / STATEMENT */}
+      <section className="bg-[#D9D9D9] hidden md:block">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <h2 className="text-center text-primary font-bold text-3xl lg:text-5xl max-w-5xl mx-auto">
+            The #1 Site for Searching Dental Practices for Sale Online
+          </h2>
         </div>
-      </div>
+      </section>
 
-      {/* Second Section */}
-      <div className="bg-[#D9D9D9] p-10 max-md:hidden">
-        <h1 className="max-w-[1280px] w-[100%] text-center text-6xl font-bold mx-auto text-primary">
-          The #1 Site for Searching Dental Practices for Sale Online
-        </h1>
-      </div>
-      <div className="w-[90%] mb-5">
-        <USMap />
-      </div>
+      {/* MAP */}
+      <section>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <USMap />
+        </div>
+      </section>
+
       <div className="bg-[#F1F1F1] flex justify-center gap-10 py-15 max-md:hidden">
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
           <h2 className="text-4xl text-center font-semibold">Number of Practices Listed</h2>
@@ -214,66 +229,72 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Third section */}
-      <div className="min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-7 min-md:gap-10 mx-auto max-w-[1440px]">
-        <div className="min-md:col-span-5 flex flex-col min-md:gap-10">
-          <h1 className="min-md:text-6xl min-md:leading-18 text-3xl text-primary font-extrabold">
-            Access To Multiple Practice Listings on One Site
-          </h1>
-          <p className="text-2xl leading-10 text-primary max-md:hidden">
-            A showcase of diverse practices with descriptions and details like
-            location, specialty, revenue, and opperatories. Secure your dream
-            location with existing infrastructure.
-          </p>
-        </div>
-        <div className="min-md:col-span-2">
-          <LazyLoadImage src={IMAGES.MAP} alt="map" className="" />
-        </div>
-      </div>
+      {/* ACCESS SECTION */}
+      <section>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="grid lg:grid-cols-7 gap-10 lg:gap-14 items-center">
+            <div className="lg:col-span-5 space-y-6">
+              <h2 className="text-primary font-extrabold text-3xl md:text-5xl lg:text-6xl leading-tight">
+                Access To Multiple Practice Listings on One Site
+              </h2>
+              <p className="hidden md:block text-primary text-xl leading-8 max-w-3xl">
+                A showcase of diverse practices with descriptions and details like location, specialty, revenue, and
+                operatories. Secure your dream location with existing infrastructure.
+              </p>
+            </div>
+            <div className="lg:col-span-2">
+              <LazyLoadImage src={IMAGES.MAP} alt="Map" className="rounded-xl w-full h-auto object-cover" />
+            </div>
+          </div>
 
-      <div className="my-6 flex justify-center min-md:hidden">
-        <button
-          className="text-white bg-[#FF7575] rounded-2xl text-md font-bold leading-8 px-3 cursor-pointer hover:opacity-75"
-          onClick={() => navigate("/signup")}
-        >
-          Get Started Now
-        </button>
-      </div>
-
-      {/* Fourth section */}
-      <div className="min-md:px-25 px-5 min-md:py-16 py-5 min-md:grid min-md:grid-cols-3 min-md:gap-10 mx-auto max-w-[1440px]">
-        <div className="flex flex-col justify-center min-md:gap-5 gap-2">
-          <h1 className="min-md:text-6xl text-3xl min-md:leading-16 text-primary font-extrabold">
-            Take Charge.
-          </h1>
-          <h3 className="text-primary font-bold min-md:text-4xl text-2xl min-md:leading-12">
-            Find the best dental office for sale... For you!
-          </h3>
-          <p className="min-md:text-3xl text-sm min-md:leading-10 text-primary">
-            You need oversight and information. Stop relying on practice brokers
-            to call you. Start getting the information you need in order to take
-            action and find the practice you want.
-          </p>
-        </div>
-
-        <div className="my-6 flex justify-center min-md:hidden">
-          <button
-            className="text-white bg-[#FF7575] rounded-2xl text-md font-bold leading-8 px-3 cursor-pointer hover:opacity-75"
-            onClick={() => navigate("/signup")}
-          >
-            Get Started Now
-          </button>
-        </div>
-
-        <div className="min-md:col-span-2">
-          <div className="flex justify-center items-center flex-wrap max-md:mt-2">
-            {HOME_TAKE_CHARGES.map((charge: any, index: number) => (
-              <HomeElement key={index} title={charge.title} text={charge.text} />
-            ))}
+          {/* Mobile CTA */}
+          <div className="md:hidden mt-8 flex justify-center">
+            <button
+              className="text-white bg-[#FF7575] rounded-xl text-sm font-bold leading-8 px-4 py-2 hover:opacity-80"
+              onClick={() => navigate("/signup")}
+            >
+              Get Started Now
+            </button>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      {/* TAKE CHARGE */}
+      <section className="bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="grid lg:grid-cols-3 gap-10 lg:gap-14 items-start">
+            <div className="space-y-4">
+              <h2 className="text-primary font-extrabold text-3xl md:text-5xl lg:text-6xl leading-tight">Take Charge.</h2>
+              <h3 className="text-primary font-bold text-2xl md:text-3xl lg:text-4xl leading-snug">
+                Find the best dental office for sale... For you!
+              </h3>
+              <p className="text-primary text-base md:text-lg lg:text-xl leading-7 md:leading-8">
+                You need oversight and information. Stop relying on practice brokers to call you. Start getting the
+                information you need in order to take action and find the practice you want.
+              </p>
+
+              {/* Mobile CTA duplicate for this section */}
+              <div className="md:hidden pt-2">
+                <button
+                  className="text-white bg-[#FF7575] rounded-xl text-sm font-bold leading-8 px-4 py-2 hover:opacity-80"
+                  onClick={() => navigate("/signup")}
+                >
+                  Get Started Now
+                </button>
+              </div>
+            </div>
+
+            <div className="lg:col-span-2">
+              <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                {HOME_TAKE_CHARGES.map((charge: any, index: number) => (
+                  <HomeElement key={index} title={charge.title} text={charge.text} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 };
 

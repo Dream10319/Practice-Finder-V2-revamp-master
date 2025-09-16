@@ -8,16 +8,15 @@ viewBox="0 0 200 200"
  <defs>
   <style type="text/css">
    <![CDATA[
-    .str1 {stroke:#373535;stroke-width:5.556;stroke-miterlimit:2.61313}
-    .str0 {stroke:black;stroke-width:5.556;stroke-miterlimit:2.61313}
+    .str0 {stroke:#292929;stroke-width:19.444;stroke-miterlimit:2.61313}
     .fil0 {fill:none}
    ]]>
   </style>
  </defs>
  <g id="Layer_x0020_1">
   <metadata id="CorelCorpID_0Corel-Layer"/>
-  <rect class="fil0 str0" x="11.981" y="14.576" width="175.606" height="174.74" rx="36" ry="36"/>
-  <line class="fil0 str1" x1="11.981" y1="73.4" x2="187.587" y2= "73.4" />
-  <line class="fil0 str1" x1="69.939" y1="73.4" x2="69.939" y2= "189.317" />
+  <rect class="fil0 str0" x="13.981" y="14.576" width="175.606" height="174.74" rx="36" ry="36"/>
+  <line class="fil0 str0" x1="13.981" y1="73.4" x2="189.587" y2= "73.4" />
+  <line class="fil0 str0" x1="71.939" y1="73.4" x2="71.939" y2= "189.317" />
  </g>
 </svg>

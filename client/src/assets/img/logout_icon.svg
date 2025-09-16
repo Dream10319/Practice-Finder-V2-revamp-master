@@ -8,7 +8,7 @@ viewBox="0 0 200 200"
  <defs>
   <style type="text/css">
    <![CDATA[
-    .str0 {stroke:black;stroke-width:11.111;stroke-linecap:round;stroke-miterlimit:2.61313}
+    .str0 {stroke:black;stroke-width:19.444;stroke-linecap:round;stroke-miterlimit:2.61313}
     .fil0 {fill:none}
    ]]>
   </style>
@@ -16,7 +16,7 @@ viewBox="0 0 200 200"
  <g id="Layer_x0020_1">
   <metadata id="CorelCorpID_0Corel-Layer"/>
   <path class="fil0 str0" d="M130.859 14.576c-26.959,0 -53.919,0 -80.878,0 -19.8,0 -36,16.2 -36,36l0 102.741c0,19.8 16.2,36 36,36l80.878 0"/>
-  <g id="_105553290046784">
+  <g id="_105553134375232">
    <line class="fil0 str0" x1="48.424" y1="100" x2="187.894" y2= "100" />
    <line class="fil0 str0" x1="187.894" y1="100" x2="145.239" y2= "65.782" />
    <line class="fil0 str0" x1="187.83" y1="100.193" x2="142.635" y2= "130.98" />

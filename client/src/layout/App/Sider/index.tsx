@@ -33,7 +33,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
           setShow(!show);
         }}
       >
-        <IoMdMenu className="text-3xl group-hover:text-[#B5B5B5]" />
+        <img src={"src/assets/img/menu_icon.svg"} alt="Users" className="w-8 h-8 group-hover:opacity-50" />
         {show ? (
           <span className="text-xl group-hover:text-[#B5B5B5]">Menu</span>
         ) : null}
@@ -61,7 +61,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             setShow(false);
           }}
         >
-          <RxDashboard className="text-3xl group-hover:text-[#B5B5B5]" />
+          <img src={"src/assets/img/dashboard_icon.svg"} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
           {show ? (
             <span className="text-xl group-hover:text-[#B5B5B5]">
               Dashboard
@@ -75,7 +75,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             setShow(false);
           }}
         >
-          <IoList className="text-3xl group-hover:text-[#B5B5B5]" />
+          <img src={"src/assets/img/listings_icon.svg"} alt="Listings" className="w-8 h-8 group-hover:opacity-50" />
           {show ? (
             <span className="text-xl group-hover:text-[#B5B5B5]">Listings</span>
           ) : null}
@@ -91,7 +91,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             navigate("/");
           }}
         >
-          <FiLogOut className="text-3xl group-hover:text-[#B5B5B5]" />
+          <img src={"src/assets/img/logout_icon.svg"} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
           {show ? (
             <span className="text-xl group-hover:text-[#B5B5B5]">Log out</span>
           ) : null}

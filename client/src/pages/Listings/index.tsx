@@ -6,56 +6,165 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { apis } from "@/apis";
 import "react-responsive-pagination/themes/classic.css";
 
-const List = ({ listing }: any) => {
-  const navigate = useNavigate();
+/**
+ * SVG icons (imported as file paths)
+ */
+import stateIcon from "@/assets/img/state-icons.svg";
+import cityIcon from "@/assets/img/city-icon.svg";
+import moneyIcon from "@/assets/img/revenue_icon.svg";
+import typeIcon from "@/assets/img/practice_type.svg";
+import operatoryIcon from "@/assets/img/operatory-icon.svg";
+
+/**
+ * 🔸 Image Pool (examples)
+ */
+const LISTING_IMAGES: Record<string, string[]> = {
+  "CA|San Francisco": [
+    "/images/ca/sf-1.jpg",
+    "/images/ca/sf-2.jpg",
+    "/images/ca/sf-3.jpg",
+    "/images/ca/sf-4.jpg",
+  ],
+  "TX|Austin": [
+    "/images/tx/austin-1.jpg",
+    "/images/tx/austin-2.jpg",
+    "/images/tx/austin-3.jpg",
+    "/images/tx/austin-4.jpg",
+  ],
+  CA: ["/images/ca/ca-1.jpg", "/images/ca/ca-2.jpg", "/images/ca/ca-3.jpg"],
+  TX: ["/images/tx/tx-1.jpg", "/images/tx/tx-2.jpg", "/images/tx/tx-3.jpg"],
+  NY: ["/images/ny/ny-1.jpg", "/images/ny/ny-2.jpg", "/images/ny/ny-3.jpg"],
+  default: ["/images/default/hero-1.jpg", "/images/default/hero-2.jpg"],
+};
+
+// Stable hash so each listing gets a consistent image
+const hashString = (s: string) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+};
+
+const getListingImage = (listing: any) => {
+  const state = (listing?.state || "").trim();
+  const city = (listing?.city || "").trim();
+  const idSeed = `${listing?._id ?? listing?.id ?? `${state}-${city}`}`;
+
+  const byCityKey = state && city ? `${state}|${city}` : "";
+  const pools: string[][] = [
+    byCityKey && LISTING_IMAGES[byCityKey] ? LISTING_IMAGES[byCityKey] : [],
+    state && LISTING_IMAGES[state] ? LISTING_IMAGES[state] : [],
+    LISTING_IMAGES.default || [],
+  ].filter((arr) => arr.length > 0);
+
+  const flattened = pools.flat();
+  if (!flattened.length) return "";
+  const idx = hashString(idSeed) % flattened.length;
+  return flattened[idx];
+};
+
+const PropertyRow = ({
+  iconSrc,
+  label,
+  value,
+}: {
+  iconSrc: string;
+  label: string;
+  value?: React.ReactNode;
+}) => (
+  <div className="flex items-center gap-2">
+    <span className="flex items-center gap-1 font-medium text-[#374151]">
+      <img src={iconSrc} alt={label} className="w-4 h-4" aria-hidden="true" />
+      <span className="whitespace-nowrap">{label}</span>
+    </span>
+    <span className="text-[#111827]">{value ?? "TBD"}</span>
+  </div>
+);
+
+// 🔑 Parent controls navigation so it can save scroll
+const List = ({ listing, onOpen }: { listing: any; onOpen: (id: string) => void }) => {
+  const imgSrc = React.useMemo(() => getListingImage(listing), [listing]);
 
   return (
-    <div
-      className="cursor-pointer group"
-      onClick={() => navigate(`/listings/${listing._id}`)}
-    >
+    <div className="cursor-pointer group" onClick={() => onOpen(listing._id)}>
+      {/* Header */}
       <div className="flex items-center gap-10 max-[768px]:gap-5 rounded-t-xl border border-[#8F8F8F] px-3 py-1 bg-[#F5F5F5]">
         <span className="whitespace-nowrap">ID {listing.id}</span>
         <span className="font-bold">{listing.name}</span>
       </div>
-      <div className="rounded-b-xl border border-[#8F8F8F] px-5 py-3 grid grid-cols-5 max-[768px]:grid-cols-1 bg-white group-hover:bg-amber-200 transition-colors duration-200">
-        <div>State: {listing.state}</div>
-        <div>City: {listing.city}</div>
-        <div>Gross Collections: {listing.annual_collections || "TBD"}</div>
-        <div>Practice Type: {listing.type}</div>
-        <div>Operatories: {listing.operatory || "TBD"}</div>
+
+      {/* Body */}
+      <div className="rounded-b-xl border border-[#8F8F8F] px-5 py-3 grid grid-cols-6 gap-4 max-[768px]:grid-cols-1 bg-white group-hover:bg-amber-200 transition-colors duration-200">
+        {/* Image (desktop only) */}
+        <div className="col-span-1 max-[1280px]:hidden">
+          {imgSrc ? (
+            <img
+              src={imgSrc}
+              alt={`${listing.city || "City"}, ${listing.state || "State"} practice`}
+              className="w-full h-28 object-cover rounded-lg shadow-sm"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <div className="w-full h-28 rounded-lg bg-gray-100" />
+          )}
+        </div>
+
+        {/* Details */}
+        <div className="col-span-5 max-[768px]:col-span-1 grid grid-cols-2 gap-x-6 gap-y-2 max-[768px]:grid-cols-1">
+          <PropertyRow iconSrc={stateIcon} label="State:" value={listing.state || "TBD"} />
+          <PropertyRow iconSrc={cityIcon} label="City:" value={listing.city || "TBD"} />
+          <PropertyRow iconSrc={moneyIcon} label="Gross Collections:" value={listing.annual_collections || "TBD"} />
+          <PropertyRow iconSrc={typeIcon} label="Practice Type:" value={listing.type || "TBD"} />
+          <PropertyRow iconSrc={operatoryIcon} label="Operatories:" value={listing.operatory || "TBD"} />
+        </div>
       </div>
     </div>
   );
 };
 
+const SCROLL_KEY = "listings:scrollState";
+
 const ListingsPage = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const state = searchParams.get("state") || "";
-  const [search, setSearch] = React.useState("");
-  const [listings, setListings] = React.useState<Array<any>>([]);
+
+  // Hydrate initial values from sessionStorage (if present)
+  const saved = (() => {
+    try {
+      return JSON.parse(sessionStorage.getItem(SCROLL_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  })() as { y?: number; page?: number; limit?: number; search?: string };
+
+  const [search, setSearch] = React.useState<string>(saved.search ?? "");
+  const [listings, setListings] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const [page, setPage] = React.useState(1);
-  const [limit, setLimit] = React.useState<number>(25);
+  const [page, setPage] = React.useState<number>(saved.page ?? 1);
+  const [limit, setLimit] = React.useState<number>(saved.limit ?? 25);
   const [totalPages, setTotalPages] = React.useState(0);
   const [totalCount, setTotalCount] = React.useState(0);
 
+  const restoreYRef = React.useRef<number | null>(typeof saved.y === "number" ? saved.y : null);
+  const didMountRef = React.useRef(false);
+
   const GetListings = async (
-    page: number,
-    limit: number,
-    state: string,
-    search: string
+    pageArg: number,
+    limitArg: number,
+    stateArg: string,
+    searchArg: string
   ) => {
     try {
       setLoading(true);
       const response: any = await apis.getPracticeList({
-        page: page,
-        limit: limit,
-        state: state,
-        search: search,
+        page: pageArg,
+        limit: limitArg,
+        state: stateArg,
+        search: searchArg,
       });
 
-      if (response.status) {
+      if (response?.status) {
         setListings(response.payload.data);
         setTotalCount(response.payload.totalCount);
         setTotalPages(response.payload.totalPages);
@@ -68,50 +177,98 @@ const ListingsPage = () => {
     }
   };
 
+  // Prevent browser from doing its own auto-restoration (we control it)
   React.useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  // Initial fetch
+  React.useEffect(() => {
+    if (didMountRef.current) return;
+    didMountRef.current = true;
     GetListings(page, limit, state, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Refetch when page/limit/state change (search triggered manually)
+  React.useEffect(() => {
+    if (!didMountRef.current) return;
+    GetListings(page, limit, state, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit, state]);
+
+  // Restore scroll after data arrives
+  React.useEffect(() => {
+    if (!loading && listings.length && restoreYRef.current != null) {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, restoreYRef.current as number);
+        restoreYRef.current = null;
+        sessionStorage.removeItem(SCROLL_KEY);
+      });
+    }
+  }, [loading, listings]);
+
+  // Open detail: save scroll + list state, then navigate
+  const openDetail = (id: string) => {
+    sessionStorage.setItem(
+      SCROLL_KEY,
+      JSON.stringify({ y: window.scrollY, page, limit, search })
+    );
+    navigate(`/listings/${id}`);
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center max-[768px]:flex-col gap-1">
         <h1 className="text-2xl font-bold">Practices for Sale</h1>
+
         <div className="flex items-center gap-3">
-          <div className="text-xl max-[768px]:text-lg whitespace-nowrap">Total: {totalCount}</div>
+          <div className="text-xl max-[768px]:text-lg whitespace-nowrap">
+            Total: {totalCount}
+          </div>
+
           <select
             className="border border-[#8F8F8F] bg-white px-1 py-1 rounded-xl w-[60px] text-xl"
-            onChange={(event: any) => {
+            value={limit}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
               setLimit(Number(event.target.value));
+              setPage(1);
             }}
           >
             <option value={25}>25</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
           </select>
+
           <div className="relative">
             <input
               className="w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-1 max-md:text-sm outline-none"
               value={search}
-              onChange={(event: any) => setSearch(event.target.value)}
+              onChange={(event) => setSearch(event.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") GetListings(1, limit, state, search);
+              }}
               placeholder="Search..."
             />
             <MdSearch
               className="absolute top-1/2 mt-[-9px] right-4 text-[#8F8F8F] text-lg cursor-pointer hover:text-black"
-              onClick={() => GetListings(page, limit, state, search)}
+              onClick={() => GetListings(1, limit, state, search)}
+              title="Search"
             />
           </div>
         </div>
       </div>
+
       <hr className="my-2" />
+
       <div className="flex justify-center mb-2 items-center">
         <div className="w-[500px]">
-          <ResponsivePagination
-            current={page}
-            total={totalPages}
-            onPageChange={setPage}
-          />
+          <ResponsivePagination current={page} total={totalPages} onPageChange={setPage} />
         </div>
       </div>
+
       {loading ? (
         <div className="flex justify-center">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
@@ -119,7 +276,7 @@ const ListingsPage = () => {
       ) : (
         <div className="flex flex-col gap-5">
           {listings.map((listing: any, index: number) => (
-            <List listing={listing} key={index} />
+            <List key={listing._id || listing.id || index} listing={listing} onOpen={openDetail} />
           ))}
         </div>
       )}

@@ -7,15 +7,6 @@ import VideoEmbed from "@/components/EmbedVideo";
 import USMap from "@/components/Map";
 import { apis } from "@/apis";
 
-/**
- * Design goals
- * - Consistent container widths + paddings using Tailwind's container + spacing scale
- * - Semantic <section> wrappers with even vertical rhythm (py-16 / py-24)
- * - Aligned grids with responsive gaps
- * - Fewer magic numbers; prefer Tailwind tokens
- * - Mobile-first: stack, then enhance at md/lg
- */
-
 interface HomeElementProps {
   title: string;
   text: string;

@@ -15,6 +15,18 @@ import Query from "@/assets/img/query.png";
 import Location1 from "@/assets/img/location1.png";
 import Thumb from "@/assets/img/thumb.svg";
 import ThumbFill from "@/assets/img/thunb-filled.svg";
+import StateIcon from "@/assets/img/state-icons.svg";
+import CityIcon from "@/assets/img/city-icon.svg";
+import GrossIcon from "@/assets/img/revenue_icon.svg";
+import TypeIcon from "@/assets/img/practice_type.svg";
+import OperatoryIcon from "@/assets/img/operatory-icon.svg";
+// import descriptionIcon from "@/assets/img/description.svg";
+import BackImg from "@/assets/img/back.svg";
+import BackImgHover from "@/assets/img/back-hover.svg";
+import Menu from "@/assets/img/menu_icon.svg"
+import Dashboard from "@/assets/img/dashboard_icon.svg"
+import Listings from "@/assets/img/listings_icon.svg"
+import Logout from "@/assets/img/logout_icon.svg"
 
 import { IMenuItem } from "@/types";
 
@@ -37,7 +49,18 @@ export const IMAGES = {
   BADGE: Badge,
   QUERY: Query,
   THUMB: Thumb,
-  THUMB_FILL: ThumbFill
+  THUMB_FILL: ThumbFill,
+  STATE_ICON: CityIcon,
+  CITY_ICON: StateIcon,
+  GROSS_ICON: GrossIcon,
+  TYPE_ICON: TypeIcon,
+  OP_ICON: OperatoryIcon,
+  BACK: BackImg,
+  BACK_HOVER: BackImgHover,
+  MENU: Menu,
+  DASHBOARD: Dashboard,
+  LISTINGS: Listings,
+  LOGOUT: Logout,
 };
 
 export const HOME_YOUTUBE_LINK = "https://youtu.be/G0hHc8rwgTw";

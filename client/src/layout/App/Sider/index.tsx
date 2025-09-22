@@ -1,14 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { IoMdMenu } from "react-icons/io";
 import { useSnackbar } from "notistack";
-import { RxDashboard } from "react-icons/rx";
-import { IoList } from "react-icons/io5";
 import { LuUsersRound } from "react-icons/lu";
-import { FiLogOut } from "react-icons/fi";
 import { SignOut } from "@/store/slices/AuthSlice";
 import { RootState } from "@/store";
+import {IMAGES} from "@/constants"
 
 interface AppSiderProps {
   show: boolean;
@@ -33,7 +30,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
           setShow(!show);
         }}
       >
-        <img src={"src/assets/img/menu_icon.svg"} alt="Users" className="w-8 h-8 group-hover:opacity-50" />
+        <img src={IMAGES.MENU} alt="Users" className="w-8 h-8 group-hover:opacity-50" />
         {show ? (
           <span className="text-xl group-hover:text-[#B5B5B5]">Menu</span>
         ) : null}
@@ -61,7 +58,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             setShow(false);
           }}
         >
-          <img src={"src/assets/img/dashboard_icon.svg"} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
+          <img src={IMAGES.DASHBOARD} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
           {show ? (
             <span className="text-xl group-hover:text-[#B5B5B5]">
               Dashboard
@@ -75,7 +72,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             setShow(false);
           }}
         >
-          <img src={"src/assets/img/listings_icon.svg"} alt="Listings" className="w-8 h-8 group-hover:opacity-50" />
+          <img src={IMAGES.LISTINGS} alt="Listings" className="w-8 h-8 group-hover:opacity-50" />
           {show ? (
             <span className="text-xl group-hover:text-[#B5B5B5]">Listings</span>
           ) : null}
@@ -91,7 +88,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             navigate("/");
           }}
         >
-          <img src={"src/assets/img/logout_icon.svg"} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
+          <img src={IMAGES.LOGOUT} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
           {show ? (
             <span className="text-xl group-hover:text-[#B5B5B5]">Log out</span>
           ) : null}

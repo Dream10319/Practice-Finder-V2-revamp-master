@@ -7,10 +7,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { IMAGES } from "@/constants";
 
-// ⬅️ Back button images (swap on hover)
-import backImg from "@/assets/img/back.svg";
-import backImgHover from "@/assets/img/back-hover.svg";
-
 const ListingDetailPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -97,16 +93,13 @@ const ListingDetailPage = () => {
                 title="Back"
               >
                 <img
-                  src={backHover ? backImgHover : backImg}
+                  src={backHover ? IMAGES.BACK_HOVER : IMAGES.BACK}
                   alt=""
                   className="w-15 h-full"
                   aria-hidden="true"
                 />
               </button>
-
-              {/* Card with shadow */}
               <div className="rounded-xl border border-[#8F8F8F] overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                {/* Header */}
                 <div className="flex items-center justify-between gap-10 px-3 py-3 bg-[#F5F5F5] text-xl">
                   <div className="flex gap-10">
                     <span className="whitespace-nowrap">ID {listing.id}</span>
@@ -117,7 +110,7 @@ const ListingDetailPage = () => {
                       <img
                         src={IMAGES.THUMB_FILL}
                         alt="liked"
-                        className="cursor-pointer w-[35px]"
+                        className="cursor-pointer w-[25px]"
                       />
                     ) : (
                       <div className="flex gap-2 items-center">
@@ -125,7 +118,7 @@ const ListingDetailPage = () => {
                         <img
                           src={IMAGES.THUMB}
                           alt="like"
-                          className="cursor-pointer w-[35px]"
+                          className="cursor-pointer w-[25px]"
                           onClick={() =>
                             listing?._id && LikeListing(listing._id)
                           }
@@ -134,42 +127,66 @@ const ListingDetailPage = () => {
                     )}
                   </div>
                 </div>
-
-                {/* Content */}
                 <div className="bg-white text-lg">
-                  <div className="border-b border-b-[#8F8F8F] px-5 py-2 flex gap-4">
-                    State: <span className="font-bold">{listing.state}</span>
-                  </div>
-                  <div className="border-b border-b-[#8F8F8F] px-5 py-2 flex gap-4">
-                    City: <span className="font-bold">{listing.city}</span>
-                  </div>
-                  <div className="border-b border-b-[#8F8F8F] px-5 py-2 flex gap-4">
-                    Gross Collections:{" "}
-                    <span className="font-bold">
-                      {listing.annual_collections}
-                    </span>
-                  </div>
-                  <div className="border-b border-b-[#8F8F8F] px-5 py-2 flex gap-4">
-                    Practice Type:{" "}
-                    <span className="font-bold">{listing.type}</span>
-                  </div>
-                  <div className="border-b border-b-[#8F8F8F] px-5 py-2 flex gap-4">
-                    Operatories:{" "}
-                    <span className="font-bold">{listing.operatory}</span>
-                  </div>
-                  <div className="border-b border-b-[#8F8F8F] px-5 py-2 flex gap-4">
-                    Description:{" "}
-                    <div>
-                      <div className="font-bold">{listing.details}</div>
-                      {listing.content ? (
-                        <>
-                          {listing.content.map((con: any) => (
-                            <li key={con.key}>
-                              {con.key}: {con.value}
-                            </li>
-                          ))}
-                        </>
-                      ) : null}
+                  <div className="px-5">
+
+                    {/* State */}
+                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
+                      <img src={IMAGES.STATE_ICON} alt="State" className="w-5 h-5" />
+                      <div />
+                      <span className="whitespace-nowrap">State:</span>
+                      <span className="font-bold">{listing.state}</span>
+                    </div>
+
+                    {/* City */}
+                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
+                      <img src={IMAGES.CITY_ICON} alt="City" className="w-5 h-5" />
+                      <div />
+                      <span className="whitespace-nowrap">City:</span>
+                      <span className="font-bold">{listing.city}</span>
+                    </div>
+
+                    {/* Gross Collections */}
+                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
+                      <img src={IMAGES.GROSS_ICON} alt="Gross Collections" className="w-5 h-5" />
+                      <div />
+                      <span className="whitespace-nowrap">Gross Collections:</span>
+                      <span className="font-bold">{listing.annual_collections}</span>
+                    </div>
+
+                    {/* Practice Type */}
+                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
+                      <img src={IMAGES.TYPE_ICON} alt="Practice Type" className="w-5 h-5" />
+                      <div />
+                      <span className="whitespace-nowrap">Practice Type:</span>
+                      <span className="font-bold">{listing.type}</span>
+                    </div>
+
+                    {/* Operatories */}
+                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
+                      <img src={IMAGES.OP_ICON} alt="Operatories" className="w-5 h-5" />
+                      <div />
+                      <span className="whitespace-nowrap">Operatories:</span>
+                      <span className="font-bold">{listing.operatory}</span>
+                    </div>
+
+                    {/* Description */}
+                    <div className="grid grid-cols-[20px_12px_180px_1fr] gap-1 border-b border-b-[#8F8F8F] py-2">
+                      <img src={""} alt="Description" className="w-5 h-5 mt-1" />
+                      <div />
+                      <span className="whitespace-nowrap mt-1">Description:</span>
+                      <div>
+                        <div className="font-bold">{listing.details}</div>
+                        {listing.content ? (
+                          <ul className="list-disc pl-6">
+                            {listing.content.map((con: any) => (
+                              <li key={con.key}>
+                                {con.key}: {con.value}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
@@ -206,8 +223,9 @@ const ListingDetailPage = () => {
         <div className="flex justify-center">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

@@ -4,16 +4,8 @@ import { MdSearch } from "react-icons/md";
 import ResponsivePagination from "react-responsive-pagination";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { apis } from "@/apis";
+import { IMAGES } from "@/constants";
 import "react-responsive-pagination/themes/classic.css";
-
-/**
- * SVG icons (imported as file paths)
- */
-import stateIcon from "@/assets/img/state-icons.svg";
-import cityIcon from "@/assets/img/city-icon.svg";
-import moneyIcon from "@/assets/img/revenue_icon.svg";
-import typeIcon from "@/assets/img/practice_type.svg";
-import operatoryIcon from "@/assets/img/operatory-icon.svg";
 
 /**
  * 🔸 Image Pool (examples)
@@ -111,11 +103,11 @@ const List = ({ listing, onOpen }: { listing: any; onOpen: (id: string) => void 
 
         {/* Details */}
         <div className="col-span-5 max-[768px]:col-span-1 grid grid-cols-2 gap-x-6 gap-y-2 max-[768px]:grid-cols-1">
-          <PropertyRow iconSrc={stateIcon} label="State:" value={listing.state || "TBD"} />
-          <PropertyRow iconSrc={cityIcon} label="City:" value={listing.city || "TBD"} />
-          <PropertyRow iconSrc={moneyIcon} label="Gross Collections:" value={listing.annual_collections || "TBD"} />
-          <PropertyRow iconSrc={typeIcon} label="Practice Type:" value={listing.type || "TBD"} />
-          <PropertyRow iconSrc={operatoryIcon} label="Operatories:" value={listing.operatory || "TBD"} />
+          <PropertyRow iconSrc={IMAGES.STATE_ICON} label="State:" value={listing.state || "TBD"} />
+          <PropertyRow iconSrc={IMAGES.CITY_ICON} label="City:" value={listing.city || "TBD"} />
+          <PropertyRow iconSrc={IMAGES.GROSS_ICON} label="Gross Collections:" value={listing.annual_collections || "TBD"} />
+          <PropertyRow iconSrc={IMAGES.TYPE_ICON} label="Practice Type:" value={listing.type || "TBD"} />
+          <PropertyRow iconSrc={IMAGES.OP_ICON} label="Operatories:" value={listing.operatory || "TBD"} />
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import LogoWhite from "@/assets/img/logo-white.png";
 import Map from "@/assets/img/map.png";
 import Search from "@/assets/img/search.png";
 import Location from "@/assets/img/location.png";
+import Connect from "@/assets/img/connect.png";
 import Chat from "@/assets/img/chat.png";
 import AuthBg from "@/assets/img/auth-bg.png";
 import Google from "@/assets/img/google.png";
@@ -13,6 +14,7 @@ import Secure from "@/assets/img/secure.png";
 import Badge from "@/assets/img/badge.png";
 import Query from "@/assets/img/query.png";
 import Location1 from "@/assets/img/location1.png";
+import SmallMap from "@/assets/img/small-map.png";
 import Thumb from "@/assets/img/thumb.svg";
 import ThumbFill from "@/assets/img/thunb-filled.svg";
 import StateIcon from "@/assets/img/state-icons.svg";
@@ -61,6 +63,8 @@ export const IMAGES = {
   DASHBOARD: Dashboard,
   LISTINGS: Listings,
   LOGOUT: Logout,
+  CONNECT: Connect,
+  SMALLMAP: SmallMap,
 };
 
 export const HOME_YOUTUBE_LINK = "https://youtu.be/G0hHc8rwgTw";

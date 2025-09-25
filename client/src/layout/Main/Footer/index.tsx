@@ -9,7 +9,7 @@ const MainFooter = () => {
         <a href="/">
         <LazyLoadImage
           alt="logo"
-          className="min-lg:h-[70px] min-md:h-[50px] h-[40px]"
+          className="min-lg:h-[50px] min-md:h-[50px] h-[40px]"
           src={IMAGES.LOGO_BIG_WHITE}
         />
         </a>

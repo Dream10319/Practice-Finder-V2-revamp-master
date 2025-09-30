@@ -42,7 +42,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
             className="flex gap-2 items-center group cursor-pointer"
             onClick={() => {
               navigate("/users");
-              setShow(false);
+              setShow(show);
             }}
           >
             <LuUsersRound className="text-3xl group-hover:text-[#B5B5B5]" />
@@ -55,7 +55,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
           className="flex gap-2 items-center group cursor-pointer"
           onClick={() => {
             navigate("/dashboard");
-            setShow(false);
+            setShow(show);
           }}
         >
           <img src={IMAGES.DASHBOARD} alt="Dashboard" className="w-8 h-8 group-hover:opacity-50" />
@@ -69,7 +69,7 @@ const AppSider: React.FC<AppSiderProps> = ({ show, setShow }) => {
           className="flex gap-2 items-center group cursor-pointer"
           onClick={() => {
             navigate("/listings");
-            setShow(false);
+            setShow(show);
           }}
         >
           <img src={IMAGES.LISTINGS} alt="Listings" className="w-8 h-8 group-hover:opacity-50" />

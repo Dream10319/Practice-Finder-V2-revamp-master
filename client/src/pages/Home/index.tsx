@@ -154,9 +154,12 @@ const HomePage: React.FC = () => {
               <div>
                 <a href="/signup" className="inline-flex">
                   <span
-                    className="inline-flex items-center justify-center gap-2 md:gap-3 
-                 text-black bg-[#FAC91A] rounded-full 
-                 hover:opacity-90 transition-opacity"
+                    className="
+                      inline-flex items-center justify-center gap-2 md:gap-3 
+                      rounded-full hover:opacity-90 transition-opacity
+                      text-[#FAC91A] underline underline-offset-8 decoration-white bg-transparent   // 🔹 mobile style
+                      md:text-black md:no-underline md:bg-[#FAC91A] // 🔹 desktop style
+                    "
                     style={{
                       width: "517px",
                       height: "63px",
@@ -200,12 +203,12 @@ const HomePage: React.FC = () => {
 
       {/* MAP */}
       {statesCount.length > 0 ? (
-      <section>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <USMap represented={true} listings={statesCount} />
-        </div>
-      </section>
-      ): null}
+        <section>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <USMap represented={true} listings={statesCount} />
+          </div>
+        </section>
+      ) : null}
       <div className="bg-[#F1F1F1] flex justify-center gap-10 py-15 max-md:hidden">
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
           <h2 className="text-4xl text-center font-semibold">Number of Practices Listed</h2>
@@ -292,7 +295,7 @@ const HomePage: React.FC = () => {
               {/* Mobile CTA duplicate for this section */}
               <div className="md:hidden pt-2">
                 <button
-                  className="text-white bg-[#FF7575] rounded-xl text-sm font-bold leading-8 px-4 py-2 hover:opacity-80"
+                  className="text-white rounded-xl text-sm font-bold leading-8 px-4 py-2 hover:opacity-80"
                   onClick={() => navigate("/signup")}
                 >
                   Get Started Now

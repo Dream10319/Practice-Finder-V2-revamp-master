@@ -113,21 +113,22 @@ const SignUpThird: React.FC<SignUpProps> = ({
               <div className="text-[#878787]">YES, I AGREE TO THE TERMS</div>
             </div>
             <button
-              className="px-7 max-md:px-5 py-1 max-md:py-0 text-white bg-[#FF7575] text-xl rounded-3xl font-bold w-[150px] mx-auto cursor-pointer hover:opacity-90 max-md:text-lg"
               type="submit"
+              className="px-7 py-3 text-white bg-[#FF7575] text-xl rounded-3xl font-bold w-[90%] cursor-pointer hover:opacity-90 max-md:text-lg"
             >
-              Done
+             Done
             </button>
-            <div>
-              <span className="text-2xl font-semibold max-md:text-lg">
+            <div className="gap-2 flex items-center">
+              <span className="text-2xl max-md:text-lg">
                 Already a Member?{" "}
               </span>
               <a
                 href="/signin"
-                className="text-2xl font-bold text-[#8C83EF] hover:opacity-90 max-md:text-lg"
+                className="text-2xl font-bold underline text-[#8C83EF] hover:opacity-90 max-md:text-lg"
               >
-                Sign In
+                Login
               </a>
+              <span className="text-2xl font-bold max-md:text-lg">→</span>
             </div>
           </form>
           <div>
@@ -193,7 +194,7 @@ const SignUpThird: React.FC<SignUpProps> = ({
               <div className="text-[#06202D]">YES, I AGREE TO THE TERMS</div>
             </div>
             <button
-              className="mt-8 bg-[#FF7575] py-2 px-10 w-fit text-white mx-auto rounded-full text-base font-semibold"
+              className="mt-8 bg-[#FF7575] py-2 px-10 text-white mx-auto rounded-full text-base font-semibold w-[100%]"
               type="submit"
             >
               Done

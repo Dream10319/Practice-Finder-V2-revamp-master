@@ -67,7 +67,7 @@ const SignUpFourth = ({ onClick }: SignUpProps) => {
             </div>
             <button
               type="submit"
-              className="px-7 max-md:px-5 py-1 text-white bg-[#FF7575] text-xl rounded-3xl font-bold w-[150px] mx-auto cursor-pointer hover:opacity-90 max-md:text-lg"
+              className="px-7 py-3 text-white bg-[#FF7575] text-xl rounded-3xl font-bold w-[90%] cursor-pointer hover:opacity-90 max-md:text-lg"
             >
               Login
             </button>
@@ -117,7 +117,7 @@ const SignUpFourth = ({ onClick }: SignUpProps) => {
             </div>
           </div>
           <button
-            className="mt-8 bg-[#FF7575] py-2 px-10 w-fit text-white mx-auto rounded-full text-base font-semibold"
+            className="mt-8 bg-[#FF7575] py-2 px-10 text-white mx-auto rounded-full text-base font-semibold w-[100%]"
             type="submit"
           >
             Log In

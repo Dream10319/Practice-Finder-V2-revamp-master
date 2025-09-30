@@ -236,7 +236,7 @@ const ListingsPage = () => {
 
           <div className="relative">
             <input
-              className="w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-1 max-md:text-sm outline-none"
+              className="w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-1 pr-9 max-md:text-sm outline-none"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               onKeyDown={(e) => {
@@ -245,7 +245,7 @@ const ListingsPage = () => {
               placeholder="Search..."
             />
             <MdSearch
-              className="absolute top-1/2 mt-[-9px] right-4 text-[#8F8F8F] text-lg cursor-pointer hover:text-black"
+              className="absolute top-1/2 mt-[-9px] right-3 text-[#8F8F8F] text-lg cursor-pointer hover:text-black"
               onClick={() => GetListings(1, limit, state, search)}
               title="Search"
             />

@@ -95,7 +95,7 @@ const ListingDetailPage = () => {
                 <img
                   src={backHover ? IMAGES.BACK_HOVER : IMAGES.BACK}
                   alt=""
-                  className="w-15 h-full"
+                  className="w-20 h-full"
                   aria-hidden="true"
                 />
               </button>

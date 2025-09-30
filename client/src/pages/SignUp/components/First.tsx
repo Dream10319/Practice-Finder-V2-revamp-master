@@ -20,8 +20,28 @@ const SignUpFirst = ({
   setEmail,
   setUID,
 }: SignUpProps) => {
+  const [roundedPracticeCount, setRoundedPracticeCount] = React.useState<number | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const pdata: any = await apis.getTotalPracticeCount();
+        if (!cancelled && pdata?.status && typeof pdata?.payload?.totalCount === "number") {
+          setRoundedPracticeCount(Math.floor(pdata.payload.totalCount / 100) * 100);
+        }
+      } finally {
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const submit = async (event: any) => {
     try {
@@ -67,15 +87,15 @@ const SignUpFirst = ({
         <h1 className="text-primary text-5xl font-bold text-center max-[768px]:text-3xl">
           Thousands of Dental Practices For Sale
         </h1>
-        <h2 className="text-primary text-4xl font-bold text-center max-[768px]:text-xl">
-          Over 1400+ listings available.
+        <h2 className="text-primary text-4xl text-center max-[768px]:text-xl">
+          Over {roundedPracticeCount}+ listings available.
         </h2>
         <div className="flex items-center justify-evenly mt-10 max-[900px]:justify-between">
           <form
             className="flex flex-col gap-5 items-center w-1/2 max-[900px]:w-3/5"
             onSubmit={submit}
           >
-            <h3 className="text-primary text-center text-2xl max-[768px]:text-lg">
+            <h3 className="text-primary text-center text-2xl max-[768px]:text-lg font-bold">
               FREE Sign Up via email or Google!
             </h3>
             <div className="flex flex-col gap-3 w-full">
@@ -95,20 +115,8 @@ const SignUpFirst = ({
                 required
               />
             </div>
-            <button
-              type="submit"
-              className="px-7 max-md:px-5 py-1 text-white bg-[#FF7575] text-xl rounded-3xl font-bold w-[150px] mx-auto cursor-pointer hover:opacity-90 max-md:text-lg"
-            >
-              {loading ? (
-                <div className="flex items-center gap-2 justify-center">
-                  <AiOutlineLoading3Quarters className="animate-spin" />
-                  Checking...
-                </div>
-              ) : (
-                "Next"
-              )}
-            </button>
-            <div className="flex items-center justify-evenly w-full">
+            <div className="flex items-center justify-evenly w-full gap-3">
+              <span className="text-gray-600">Sign up via Google</span>
               <GoogleOAuthProvider
                 clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}
               >
@@ -120,16 +128,30 @@ const SignUpFirst = ({
               </GoogleOAuthProvider>
             </div>
 
-            <div>
-              <span className="text-2xl font-semibold max-md:text-lg">
+            <button
+              type="submit"
+              className="px-7 py-3 text-white bg-[#FF7575] text-xl rounded-3xl font-bold w-[90%] cursor-pointer hover:opacity-90 max-md:text-lg"
+            >
+              {loading ? (
+                <div className="flex items-center gap-2 justify-center">
+                  <AiOutlineLoading3Quarters className="animate-spin" />
+                  Checking...
+                </div>
+              ) : (
+                "Next"
+              )}
+            </button>
+            <div className="gap-2 flex items-center">
+              <span className="text-2xl max-md:text-lg">
                 Already a Member?{" "}
               </span>
               <a
                 href="/signin"
-                className="text-2xl font-bold text-[#8C83EF] hover:opacity-90 max-md:text-lg"
+                className="text-2xl font-bold underline text-[#8C83EF] hover:opacity-90 max-md:text-lg"
               >
-                Sign In
+                Login
               </a>
+              <span className="text-2xl font-bold max-md:text-lg">→</span>
             </div>
           </form>
           <div>
@@ -193,7 +215,7 @@ const SignUpFirst = ({
             </div>
           </div>
           <button
-            className="mt-8 bg-[#FF7575] py-2 px-10 w-fit text-white mx-auto rounded-full text-base font-semibold cursor-pointer"
+            className="mt-8 bg-[#FF7575] py-2 px-10 w-[100%] text-white mx-auto rounded-full text-base font-semibold cursor-pointer"
             type="submit"
           >
             {loading ? (

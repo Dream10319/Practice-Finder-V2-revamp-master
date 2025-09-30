@@ -29,6 +29,7 @@ import Menu from "@/assets/img/menu_icon.svg"
 import Dashboard from "@/assets/img/dashboard_icon.svg"
 import Listings from "@/assets/img/listings_icon.svg"
 import Logout from "@/assets/img/logout_icon.svg"
+import ArrowDown from "@/assets/img/arrow-down.gif"
 
 import { IMenuItem } from "@/types";
 
@@ -65,6 +66,7 @@ export const IMAGES = {
   LOGOUT: Logout,
   CONNECT: Connect,
   SMALLMAP: SmallMap,
+  ARROWDOWN: ArrowDown,
 };
 
 export const HOME_YOUTUBE_LINK = "https://youtu.be/G0hHc8rwgTw";

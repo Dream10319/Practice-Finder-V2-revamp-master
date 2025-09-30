@@ -47,13 +47,12 @@ const AboutPage: React.FC = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Guidance sentence */}
           <h2 className="text-primary font-bold text-2xl sm:text-3xl md:text-[42px] leading-tight max-w-5xl mx-auto mb-8 sm:mb-10 md:mb-12">
-            Once you find a dental practice you like! Connect with us by completing the form under each listing.
+            Once you find a dental practice you like! Connect with us via the “next steps” in the form for each listing.
           </h2>
 
           {/* Supporting paragraph */}
           <p className="text-primary text-lg sm:text-xl md:text-2xl leading-relaxed font-normal mx-auto mb-10 sm:mb-12 md:mb-16">
-            Align with key team members on your team when going into the buying process. <br className="hidden sm:block" />
-            Choose to connect with a dental specific lawyer, a lending partner, and a buyer’s rep.
+            Reach out if you have any problems with our site. We partner with practice brokers all over the United States. We also have a large network of professionals including practice buyer reps for valuation, CPA’s for due diligence, lawyers for PSA’s, and bankers for loans.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 py-2 sm:py-4">

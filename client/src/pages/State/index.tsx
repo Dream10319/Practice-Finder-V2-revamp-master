@@ -115,7 +115,7 @@ const StatePage = () => {
   return (
     <div>
       <div className="max-w-[1440px] mx-auto py-10 max-[480px]:py-5">
-        <h1 className="text-5xl text-primary font-extrabold max-[480px]:text-2xl max-[480px]:px-2">
+        <h1 className="text-5xl text-primary font-extrabold max-[480px]:text-2xl max-[480px]:px-2 text-center">
           Dental Practices For Sale in {state}
         </h1>
       </div>

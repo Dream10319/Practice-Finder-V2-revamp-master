@@ -150,29 +150,23 @@ const HomePage: React.FC = () => {
               <div className="md:hidden">
                 <VideoEmbed />
               </div>
-
               <div>
-                <a href="/signup" className="inline-flex">
+                <a href="/signup" className="inline-flex w-full sm:w-auto">
                   <span
                     className="
-                      inline-flex items-center justify-center gap-2 md:gap-3 
+                      inline-flex items-center justify-center gap-3
                       rounded-full hover:opacity-90 transition-opacity
-                      text-[#FAC91A] underline underline-offset-8 decoration-white bg-transparent   // 🔹 mobile style
-                      md:text-black md:no-underline md:bg-[#FAC91A] // 🔹 desktop style
+                      text-black no-underline bg-[#FAC91A]
+                      font-[800] font-[Almarai] text-[20px] sm:text-[28px] lg:text-[32px]
+                      leading-[28px] sm:leading-[34px] lg:leading-[37px]
+                      px-6 py-3 sm:px-10 sm:py-4
+                      w-full sm:w-[400px] lg:w-[517px]
                     "
-                    style={{
-                      width: "517px",
-                      height: "63px",
-                      fontFamily: "'Almarai', sans-serif",
-                      fontWeight: 800,
-                      fontSize: "32px",
-                      lineHeight: "37px",
-                    }}
                   >
                     Get Started Now
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
+                      className="w-5 h-5 sm:w-6 sm:h-6"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -184,7 +178,6 @@ const HomePage: React.FC = () => {
                 </a>
               </div>
             </div>
-
             <div className="hidden md:block">
               <VideoEmbed />
             </div>

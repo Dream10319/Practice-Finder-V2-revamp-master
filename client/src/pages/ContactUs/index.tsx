@@ -74,14 +74,13 @@ const ContactUsPage = () => {
       </div>
       <div className="text-center px-5 min-md:py-10 py-5 max-w-[1280px] mx-auto">
         <h2 className="text-4xl max-md:text-2xl font-bold min-md:leading-12 text-primary">
-          You can chat with a Licenced Buyer Representative once you have found
-          the ideal practice for sale.
+          Once you find a dental practice you like! Connect with us via the “next steps” <br />
+          in the form for each listing.
         </h2>
         <p className="text-3xl max-md:text-lg text-primary min-md:leading-10 mt-5">
-          You can connect with a buyers rep to help answer questions get
-          feedback and insight. Have an advocate on your side when going into
-          the buying process. Sometimes brokers are not available or do not
-          provide you with the best advise.
+          Reach out if you have any problems with our site. We partner with practice brokers all over
+          the United States. We also have a large network of professionals including practice buyer reps
+          for valuation, CPA’s for due diligence, lawyers for PSA’s, and bankers for loans.
         </p>
         <div className="flex justify-around mt-15 max-md:hidden">
           <div className="flex flex-col gap-5">
@@ -93,8 +92,8 @@ const ContactUsPage = () => {
             <img src={IMAGES.LOCATION} alt="search" width={250} />
           </div>
           <div className="flex flex-col gap-5">
-            <h1 className="text-5xl font-bold text-primary">Chat</h1>
-            <img src={IMAGES.CHAT} alt="search" width={250} />
+            <h1 className="text-5xl font-bold text-primary">Connect</h1>
+            <img src={IMAGES.CONNECT} alt="search" width={200} />
           </div>
         </div>
       </div>

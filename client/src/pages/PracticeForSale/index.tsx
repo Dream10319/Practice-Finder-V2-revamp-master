@@ -191,8 +191,7 @@ const PracticeForSalePage = () => {
                 <div className="mt-1 bg-secondary w-[25px] h-[25px] max-[480px]:h-[20px] max-[480px]:w-[20px] rounded-lg border border-primary shadow-2xl"></div>
                 <div className="max-w-[300px] max-[480px]:w-[250px]">
                   <p className="max-[480px]:text-sm">
-                    These states are fully represented by all major licensed
-                    brokerages in that state.
+                  These states are 90% covered by major brokerages in that state
                   </p>
                 </div>
               </div>

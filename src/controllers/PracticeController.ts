@@ -4,6 +4,53 @@ import StateDescriptions from "@models/StateDescriptions";
 import User from "@models/User";
 import { MailgunService } from "@services/mailgun";
 import { VALIDATE_STATES } from "@constants/index";
+import path from "path";
+import fs from "fs";
+import { promises as fsp } from "fs";
+
+async function readImagesForState(state: string, reqHostBase: string): Promise<string[]> {
+  const imagesCache: Map<string, { ts: number; images: string[] }> = new Map();
+  const CACHE_TTL_MS = 60 * 1000; // 60s, tune as needed
+  // Default to your project's client/public/listing_images folder if env not set
+  const IMAGES_ROOT =
+    process.env.LISTING_IMAGES_PATH ||
+    path.join(process.cwd(), "client", "public", "listing_images");
+
+  const key = (state || "default").toString().trim();
+  const now = Date.now();
+
+  // return cached if fresh
+  const cached = imagesCache.get(key);
+  if (cached && now - cached.ts < CACHE_TTL_MS) {
+    return cached.images;
+  }
+
+  const stateDir = path.join(IMAGES_ROOT, key);
+  let files: string[] = [];
+
+  try {
+    if (fs.existsSync(stateDir)) {
+      const all = await fsp.readdir(stateDir);
+      files = all.filter((f) => /\.(jpe?g|png|webp|avif|gif)$/i.test(f));
+    } else {
+      // directory missing -> empty
+      files = [];
+    }
+  } catch (err) {
+    console.error("readImagesForState fs error:", err);
+    files = [];
+  }
+
+  // Build public URLs. This expects your server to serve the folder at '/listing_images'
+  // Example resulting URL: https://practice-mls.com/listing_images/DEFAULT/photo1.jpg
+  const hostBase = reqHostBase.replace(/\/$/, "");
+  const images = files.map(
+    (f) => `${hostBase}/listing_images/${encodeURIComponent(key)}/${encodeURIComponent(f)}`
+  );
+  imagesCache.set(key, { ts: now, images });
+  return images;
+}
+
 
 export class PracticeController {
   GetPracticeList = async (req: Request, res: Response) => {
@@ -422,4 +469,32 @@ export class PracticeController {
       });
     }
   };
+
+  GetListingImages = async (req: Request, res: Response) => {
+    try {
+      const stateParam = (req.params?.state || "default").toString().trim();
+  
+      const forwardedProto = (req.headers["x-forwarded-proto"] as string) || req.protocol;
+      const forwardedHost = (req.headers["x-forwarded-host"] as string) || (req.headers.host as string);
+      const reqHostBase = process.env.FRONTEND_BASE_URL
+        ? process.env.FRONTEND_BASE_URL.replace(/\/$/, "")
+        : `${forwardedProto}://${forwardedHost}`;
+  
+      let images = await readImagesForState(stateParam, reqHostBase);
+  
+      return res.status(200).json({
+        status: true,
+        payload: {
+          state: stateParam,
+          images,
+        },
+      });
+    } catch (err) {
+      console.error("GetListingImages error:", err);
+      return res.status(500).json({
+        status: false,
+        message: "Server error, please try again later.",
+      });
+    }
+  };  
 }

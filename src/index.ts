@@ -31,6 +31,7 @@ const server = http.createServer(app);
 connectDB();
 
 app.use(express.static("public"));
+app.use("/listing_images", express.static(path.join(__dirname, "../public/listing_images")));
 app.use(express.static(path.join(__dirname, "../client/dist")));
 app.use("*", (req: Request, res: Response) =>
   res.sendFile(path.join(__dirname, "../client/dist", "index.html"))

@@ -15,4 +15,5 @@ router.get("/likes", Auth as any, practiceController.GetLikedListings as any);
 router.get("/:id/liked-listings", Auth as any, practiceController.GetLikedListingsByUserId as any);
 router.post("/state-description", practiceController.GetStateDescription as any);
 router.get("/total-count", practiceController.GetTotalPracticeCount as any);
+router.get("/:state/listing-images", practiceController.GetListingImages as any);
 export default router;

@@ -7,51 +7,15 @@ import { apis } from "@/apis";
 import { IMAGES } from "@/constants";
 import "react-responsive-pagination/themes/classic.css";
 
-/**
- * 🔸 Image Pool (examples)
- */
+/** Fallback image pools */
 const LISTING_IMAGES: Record<string, string[]> = {
-  "CA|San Francisco": [
-    "/images/ca/sf-1.jpg",
-    "/images/ca/sf-2.jpg",
-    "/images/ca/sf-3.jpg",
-    "/images/ca/sf-4.jpg",
-  ],
-  "TX|Austin": [
-    "/images/tx/austin-1.jpg",
-    "/images/tx/austin-2.jpg",
-    "/images/tx/austin-3.jpg",
-    "/images/tx/austin-4.jpg",
-  ],
-  CA: ["/images/ca/ca-1.jpg", "/images/ca/ca-2.jpg", "/images/ca/ca-3.jpg"],
-  TX: ["/images/tx/tx-1.jpg", "/images/tx/tx-2.jpg", "/images/tx/tx-3.jpg"],
-  NY: ["/images/ny/ny-1.jpg", "/images/ny/ny-2.jpg", "/images/ny/ny-3.jpg"],
-  default: ["/images/default/hero-1.jpg", "/images/default/hero-2.jpg"],
+  default: ["/listing_images/default/default.jpg", "/listing_images/default/default.jpg"],
 };
 
-// Stable hash so each listing gets a consistent image
 const hashString = (s: string) => {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
   return Math.abs(h);
-};
-
-const getListingImage = (listing: any) => {
-  const state = (listing?.state || "").trim();
-  const city = (listing?.city || "").trim();
-  const idSeed = `${listing?._id ?? listing?.id ?? `${state}-${city}`}`;
-
-  const byCityKey = state && city ? `${state}|${city}` : "";
-  const pools: string[][] = [
-    byCityKey && LISTING_IMAGES[byCityKey] ? LISTING_IMAGES[byCityKey] : [],
-    state && LISTING_IMAGES[state] ? LISTING_IMAGES[state] : [],
-    LISTING_IMAGES.default || [],
-  ].filter((arr) => arr.length > 0);
-
-  const flattened = pools.flat();
-  if (!flattened.length) return "";
-  const idx = hashString(idSeed) % flattened.length;
-  return flattened[idx];
 };
 
 const PropertyRow = ({
@@ -72,21 +36,23 @@ const PropertyRow = ({
   </div>
 );
 
-// 🔑 Parent controls navigation so it can save scroll
-const List = ({ listing, onOpen }: { listing: any; onOpen: (id: string) => void }) => {
-  const imgSrc = React.useMemo(() => getListingImage(listing), [listing]);
+const List = ({
+  listing,
+  onOpen,
+}: {
+  listing: any;
+  onOpen: (id: string) => void;
+}) => {
+  const imgSrc = listing?.imgsrc ?? "";
 
   return (
     <div className="cursor-pointer group" onClick={() => onOpen(listing._id)}>
-      {/* Header */}
       <div className="flex items-center gap-10 max-[768px]:gap-5 rounded-t-xl border border-[#8F8F8F] px-3 py-1 bg-[#F5F5F5]">
         <span className="whitespace-nowrap">ID {listing.id}</span>
         <span className="font-bold">{listing.name}</span>
       </div>
 
-      {/* Body */}
       <div className="rounded-b-xl border border-[#8F8F8F] px-5 py-3 grid grid-cols-6 gap-4 max-[768px]:grid-cols-1 bg-white group-hover:bg-amber-200 transition-colors duration-200">
-        {/* Image (desktop only) */}
         <div className="col-span-1 max-[1280px]:hidden">
           {imgSrc ? (
             <img
@@ -101,7 +67,6 @@ const List = ({ listing, onOpen }: { listing: any; onOpen: (id: string) => void 
           )}
         </div>
 
-        {/* Details */}
         <div className="col-span-5 max-[768px]:col-span-1 grid grid-cols-2 gap-x-6 gap-y-2 max-[768px]:grid-cols-1">
           <PropertyRow iconSrc={IMAGES.STATE_ICON} label="State:" value={listing.state || "TBD"} />
           <PropertyRow iconSrc={IMAGES.CITY_ICON} label="City:" value={listing.city || "TBD"} />
@@ -119,9 +84,8 @@ const SCROLL_KEY = "listings:scrollState";
 const ListingsPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const state = searchParams.get("state") || "";
+  const stateQuery = (searchParams.get("state") || "").trim();
 
-  // Hydrate initial values from sessionStorage (if present)
   const saved = (() => {
     try {
       return JSON.parse(sessionStorage.getItem(SCROLL_KEY) || "{}");
@@ -141,57 +105,116 @@ const ListingsPage = () => {
   const restoreYRef = React.useRef<number | null>(typeof saved.y === "number" ? saved.y : null);
   const didMountRef = React.useRef(false);
 
+  const chooseImageForListing = React.useCallback(
+    (listing: any, imagesForState: string[] | undefined) => {
+      const stateVal = (listing?.state || "").trim();
+      const city = (listing?.city || "").trim();
+      const idSeed = `${listing?._id ?? listing?.id ?? `${stateVal}-${city}`}`;
+
+      const apiPool = imagesForState && imagesForState.length ? imagesForState : [];
+
+      const fallbackPools: string[][] = [
+        stateVal && city && LISTING_IMAGES[`${stateVal}|${city}`] ? LISTING_IMAGES[`${stateVal}|${city}`] : [],
+        stateVal && LISTING_IMAGES[stateVal] ? LISTING_IMAGES[stateVal] : [],
+        LISTING_IMAGES.default || [],
+      ].filter((arr) => arr.length > 0);
+
+      const flattened = (apiPool.length ? apiPool : fallbackPools.flat()).filter(Boolean);
+      if (!flattened.length) return "";
+
+      const idx = hashString(idSeed) % flattened.length;
+      return flattened[idx];
+    },
+    []
+  );
+
   const GetListings = async (
     pageArg: number,
     limitArg: number,
-    stateArg: string,
+    searchStateQuery: string,
     searchArg: string
   ) => {
     try {
       setLoading(true);
+
       const response: any = await apis.getPracticeList({
         page: pageArg,
         limit: limitArg,
-        state: stateArg,
+        state: searchStateQuery,
         search: searchArg,
       });
 
-      if (response?.status) {
-        setListings(response.payload.data);
-        setTotalCount(response.payload.totalCount);
-        setTotalPages(response.payload.totalPages);
-        setPage(response.payload.currentPage);
+      if (!response?.status) {
+        setListings([]);
+        setTotalCount(0);
+        setTotalPages(0);
+        return;
       }
+
+      const fetchedListings: any[] = response.payload.data || [];
+
+      const uniqueStates = Array.from(
+        new Set(
+          fetchedListings.map((l) => {
+            const s = (l?.state || "").toString().trim();
+            return s ? s : "default";
+          })
+        )
+      );
+
+      const imagesRequests = uniqueStates.map((st) =>
+        apis
+          .getListingImages(st)
+          .then((res: any) => ({
+            state: st,
+            images: Array.isArray(res?.payload?.images) ? res.payload.images : [],
+          }))
+          .catch(() => ({ state: st, images: [] }))
+      );
+
+      const imagesResults = await Promise.all(imagesRequests);
+
+      const imagesByState: Record<string, string[]> = {};
+      imagesResults.forEach((r) => {
+        imagesByState[r.state] = r.images || [];
+      });
+
+      const mapped = fetchedListings.map((l) => {
+        const stateKey = (l?.state || "").toString().trim() || "default";
+        const imgsrc = chooseImageForListing(l, imagesByState[stateKey]);
+        return { ...l, imgsrc };
+      });
+
+      setListings(mapped);
+      setTotalCount(response.payload.totalCount);
+      setTotalPages(response.payload.totalPages);
+      setPage(response.payload.currentPage);
     } catch (err) {
-      console.log(err);
+      console.error("GetListings error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Prevent browser from doing its own auto-restoration (we control it)
   React.useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
   }, []);
 
-  // Initial fetch
   React.useEffect(() => {
     if (didMountRef.current) return;
     didMountRef.current = true;
-    GetListings(page, limit, state, search);
+    GetListings(page, limit, stateQuery, search);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Refetch when page/limit/state change (search triggered manually)
   React.useEffect(() => {
     if (!didMountRef.current) return;
-    GetListings(page, limit, state, search);
+    GetListings(page, limit, stateQuery, search);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, limit, state]);
+  }, [page, limit, stateQuery]);
 
-  // Restore scroll after data arrives
   React.useEffect(() => {
     if (!loading && listings.length && restoreYRef.current != null) {
       requestAnimationFrame(() => {
@@ -202,7 +225,6 @@ const ListingsPage = () => {
     }
   }, [loading, listings]);
 
-  // Open detail: save scroll + list state, then navigate
   const openDetail = (id: string) => {
     sessionStorage.setItem(
       SCROLL_KEY,
@@ -240,13 +262,13 @@ const ListingsPage = () => {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") GetListings(1, limit, state, search);
+                if (e.key === "Enter") GetListings(1, limit, stateQuery, search);
               }}
               placeholder="Search..."
             />
             <MdSearch
               className="absolute top-1/2 mt-[-9px] right-3 text-[#8F8F8F] text-lg cursor-pointer hover:text-black"
-              onClick={() => GetListings(1, limit, state, search)}
+              onClick={() => GetListings(1, limit, stateQuery, search)}
               title="Search"
             />
           </div>

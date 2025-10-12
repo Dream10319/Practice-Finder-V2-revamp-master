@@ -176,7 +176,7 @@ const ListingDetailPage = () => {
                       <div />
                       <span className="whitespace-nowrap mt-1">Description:</span>
                       <div>
-                        <div className="font-bold">{listing.details}</div>
+                        <div className="font-bold">{listing.details}</div>e
                         {listing.content ? (
                           <ul className="list-disc pl-6">
                             {listing.content.map((con: any) => (

@@ -55,10 +55,11 @@ async function readImagesForState(state: string, reqHostBase: string): Promise<s
 export class PracticeController {
   GetPracticeList = async (req: Request, res: Response) => {
     try {
-      const { page = 1, limit = 25, search = "", state = "" } = req.body;
-      const parsedPage = parseInt(page);
+      // 1. Destructure new filter fields (operatory, type)
+      const { page = 1, limit = 25, search = "", state = "", operatory = "", type = "" } = req.body;
+      const parsedPage = parseInt(page as string);
       const validLimits = [25, 50, 100];
-      const parsedLimit = parseInt(limit);
+      const parsedLimit = parseInt(limit as string);
 
       if (!validLimits.includes(parsedLimit))
         return res.status(400).json({
@@ -67,25 +68,76 @@ export class PracticeController {
         });
 
       const filter: any = {};
-      if (state || search) {
-        filter.$or = [];
-        if (state) {
-          filter.$or.push(
-            { state: { $regex: state, $options: "i" } },
-            { name: { $regex: state, $options: "i" } },
-            { city: { $regex: state, $options: "i" } },
-            { type: { $regex: state, $options: "i" } }
-          );
-        }
-        if (search) {
-          filter.$or.push(
-            { state: { $regex: search, $options: "i" } },
-            { name: { $regex: search, $options: "i" } },
-            { city: { $regex: search, $options: "i" } },
-            { type: { $regex: search, $options: "i" } }
-          );
+      const orConditions: any[] = [];
+      const andConditions: any[] = [];
+
+      // 2. Handle State and General Search (Combined OR conditions)
+      // Note: The original logic combined 'state' (from URL query) and 'search' (keyword search)
+      // into a single $or array, which works for keyword searching but is poor for strict filtering.
+      // I'll keep the original $or structure but will now add strict filters in $and.
+
+      // Separate conditions for state/search if they are used for general keyword matching
+      const generalSearchTerms = [];
+      if (state) generalSearchTerms.push(state);
+      if (search) generalSearchTerms.push(search);
+
+      if (generalSearchTerms.length > 0) {
+        // Create OR conditions for general keyword search across multiple fields
+        // This maintains the original function's behavior for 'state' and 'search'
+        const searchRegex = new RegExp(generalSearchTerms.join('|'), 'i');
+
+        orConditions.push(
+          { state: { $regex: searchRegex } },
+          { name: { $regex: searchRegex } },
+          { city: { $regex: searchRegex } },
+          { type: { $regex: searchRegex } }
+        );
+      }
+
+      // 3. Add Strict Filters (AND conditions)
+
+      // Strict filter for Operatory
+      if (operatory) {
+        if (operatory === '4+') {
+          // For '4+' assume the field is a number and find practices with 4 or more
+          // NOTE: This assumes 'operatory' field in your DB is stored as a number.
+          andConditions.push({ operatory: { $gte: 4 } });
+        } else {
+          // Otherwise, search for the exact value
+          andConditions.push({ operatory: operatory });
         }
       }
+
+      // Strict filter for Practice Type
+      if (type) {
+        // Search for the exact practice type
+        andConditions.push({ type: type });
+      }
+
+
+      // 4. Combine all conditions into the final filter object
+      if (orConditions.length > 0) {
+        filter.$or = orConditions;
+      }
+
+      if (andConditions.length > 0) {
+        // If OR conditions exist, we need a top-level $and to combine $or with $andConditions.
+        // If only AND conditions exist, they can be top-level.
+        const combinedConditions = orConditions.length > 0
+          ? [{ $or: orConditions }, ...andConditions]
+          : andConditions;
+
+        if (orConditions.length > 0) {
+          filter.$and = combinedConditions;
+          delete filter.$or; // Remove the direct $or if we're using a top-level $and
+        } else {
+          // If no general search ($or), the new filters ($andConditions) are the only filter
+          Object.assign(filter, ...andConditions.map(cond => ({ [Object.keys(cond)[0]]: Object.values(cond)[0] })));
+        }
+      }
+
+
+      // --- Pagination and Execution (Remains the same) ---
 
       const totalCount = await Practice.countDocuments(filter);
       const skip = (parsedPage - 1) * parsedLimit;
@@ -114,6 +166,7 @@ export class PracticeController {
         },
       });
     } catch (error) {
+      console.error("GetPracticeList error:", error); // Added error logging
       return res.status(500).json({
         statu: false,
         message: "Server error, please try again later.",
@@ -473,15 +526,15 @@ export class PracticeController {
   GetListingImages = async (req: Request, res: Response) => {
     try {
       const stateParam = (req.params?.state || "default").toString().trim();
-  
+
       const forwardedProto = (req.headers["x-forwarded-proto"] as string) || req.protocol;
       const forwardedHost = (req.headers["x-forwarded-host"] as string) || (req.headers.host as string);
       const reqHostBase = process.env.FRONTEND_BASE_URL
         ? process.env.FRONTEND_BASE_URL.replace(/\/$/, "")
         : `${forwardedProto}://${forwardedHost}`;
-  
+
       let images = await readImagesForState(stateParam, reqHostBase);
-  
+
       return res.status(200).json({
         status: true,
         payload: {
@@ -496,5 +549,5 @@ export class PracticeController {
         message: "Server error, please try again later.",
       });
     }
-  };  
+  };
 }

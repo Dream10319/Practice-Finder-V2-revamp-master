@@ -62,6 +62,52 @@ const ListingDetailPage = () => {
     }
   }, [id]);
 
+  // CORRECTION: Utility component for standard, one-line-on-mobile detail row.
+  // The label and value are now grouped in a flex container on mobile to ensure one line.
+  const DetailRow = ({ icon, label, value }: { icon: string, label: string, value: any }) => (
+    // Mobile: Icon (20px) | Label and Value in a single flex column (1fr).
+    // Desktop: Your original 4-column structure.
+    <div className="grid grid-cols-[20px_1fr] md:grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
+      <img src={icon} alt={label} className="w-5 h-5" />
+      <div className="hidden md:block" />
+      
+      {/* Mobile view uses flex to keep key/value on one line */}
+      <div className="flex justify-between w-full md:contents"> 
+        <span className="whitespace-nowrap font-semibold md:col-span-1">
+          {label}:
+        </span>
+        <span className="font-bold text-right md:text-left truncate md:col-span-1">
+          {value}
+        </span>
+      </div>
+    </div>
+  );
+  
+  // Description field: Content wraps to a new line on mobile.
+  const DescriptionRow = ({ icon, label, details, content }: { icon: string, label: string, details: any, content: any }) => (
+    // Mobile: Icon (20px) | Label (1fr) in the first row. Content starts on a new line.
+    <div className="grid grid-cols-[20px_1fr] md:grid-cols-[20px_12px_180px_1fr] gap-1 border-b border-b-[#8F8F8F] py-2">
+      <img src={icon} alt={label} className="w-5 h-5 mt-1" />
+      <div className="hidden md:block" />
+      <span className="whitespace-nowrap mt-1 font-semibold col-span-1 md:col-span-1">
+        {label}:
+      </span>
+      {/* This element is forced to span the full width on mobile (col-span-full) */}
+      <div className="col-span-full md:col-span-1 md:text-left mt-1 md:mt-0">
+        <div className="font-bold">{details}</div>
+        {content ? (
+          <ul className="list-disc pl-6 text-base mt-1">
+            {content.map((con: any) => (
+              <li key={con.key}>
+                {con.key}: {con.value}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -94,18 +140,18 @@ const ListingDetailPage = () => {
               >
                 <img
                   src={backHover ? IMAGES.BACK_HOVER : IMAGES.BACK}
-                  alt=""
+                  alt="Back Arrow"
                   className="w-20 h-full"
                   aria-hidden="true"
                 />
               </button>
               <div className="rounded-xl border border-[#8F8F8F] overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                <div className="flex items-center justify-between gap-10 px-3 py-3 bg-[#F5F5F5] text-xl">
-                  <div className="flex gap-10">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-10 px-3 py-3 bg-[#F5F5F5] text-lg md:text-xl">
+                  <div className="flex flex-col md:flex-row gap-2 md:gap-10">
                     <span className="whitespace-nowrap">ID {listing.id}</span>
                     <span className="font-bold">{listing.name}</span>
                   </div>
-                  <div>
+                  <div className="text-base md:text-xl">
                     {likeListings.some((l: any) => l._id === id) ? (
                       <img
                         src={IMAGES.THUMB_FILL}
@@ -113,104 +159,84 @@ const ListingDetailPage = () => {
                         className="cursor-pointer w-[25px]"
                       />
                     ) : (
-                      <div className="flex gap-2 items-center">
+                      <div className="flex gap-2 items-center cursor-pointer" onClick={() => listing?._id && LikeListing(listing._id)}>
                         Like Listing
                         <img
                           src={IMAGES.THUMB}
                           alt="like"
-                          className="cursor-pointer w-[25px]"
-                          onClick={() =>
-                            listing?._id && LikeListing(listing._id)
-                          }
+                          className="w-[25px]"
                         />
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="bg-white text-lg">
+                <div className="bg-white text-base md:text-lg">
                   <div className="px-5">
-
                     {/* State */}
-                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
-                      <img src={IMAGES.STATE_ICON} alt="State" className="w-5 h-5" />
-                      <div />
-                      <span className="whitespace-nowrap">State:</span>
-                      <span className="font-bold">{listing.state}</span>
-                    </div>
+                    <DetailRow
+                      icon={IMAGES.STATE_ICON}
+                      label="State"
+                      value={listing.state}
+                    />
 
                     {/* City */}
-                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
-                      <img src={IMAGES.CITY_ICON} alt="City" className="w-5 h-5" />
-                      <div />
-                      <span className="whitespace-nowrap">City:</span>
-                      <span className="font-bold">{listing.city}</span>
-                    </div>
+                    <DetailRow
+                      icon={IMAGES.CITY_ICON}
+                      label="City"
+                      value={listing.city}
+                    />
 
                     {/* Gross Collections */}
-                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
-                      <img src={IMAGES.GROSS_ICON} alt="Gross Collections" className="w-5 h-5" />
-                      <div />
-                      <span className="whitespace-nowrap">Gross Collections:</span>
-                      <span className="font-bold">{listing.annual_collections}</span>
-                    </div>
+                    <DetailRow
+                      icon={IMAGES.GROSS_ICON}
+                      label="Gross Collections"
+                      value={listing.annual_collections}
+                    />
 
                     {/* Practice Type */}
-                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
-                      <img src={IMAGES.TYPE_ICON} alt="Practice Type" className="w-5 h-5" />
-                      <div />
-                      <span className="whitespace-nowrap">Practice Type:</span>
-                      <span className="font-bold">{listing.type}</span>
-                    </div>
+                    <DetailRow
+                      icon={IMAGES.TYPE_ICON}
+                      label="Practice Type"
+                      value={listing.type}
+                    />
 
                     {/* Operatories */}
-                    <div className="grid grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
-                      <img src={IMAGES.OP_ICON} alt="Operatories" className="w-5 h-5" />
-                      <div />
-                      <span className="whitespace-nowrap">Operatories:</span>
-                      <span className="font-bold">{listing.operatory}</span>
-                    </div>
+                    <DetailRow
+                      icon={IMAGES.OP_ICON}
+                      label="Operatories"
+                      value={listing.operatory}
+                    />
 
-                    {/* Description */}
-                    <div className="grid grid-cols-[20px_12px_180px_1fr] gap-1 border-b border-b-[#8F8F8F] py-2">
-                      <img src={""} alt="Description" className="w-5 h-5 mt-1" />
-                      <div />
-                      <span className="whitespace-nowrap mt-1">Description:</span>
-                      <div>
-                        <div className="font-bold">{listing.details}</div>
-                        {listing.content ? (
-                          <ul className="list-disc pl-6">
-                            {listing.content.map((con: any) => (
-                              <li key={con.key}>
-                                {con.key}: {con.value}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </div>
-                    </div>
+                    {/* Description - Content will wrap to a new line on mobile */}
+                    <DescriptionRow
+                      icon={IMAGES.TYPE_ICON}
+                      label="Description"
+                      details={listing.details}
+                      content={listing.content}
+                    />
                   </div>
 
                   {authUser && authUser.role === "ADMIN" ? (
                     <div className="border-b border-b-[#8F8F8F] px-5 py-2">
-                      <div className="font-extrabold">Admin Content</div>
+                      <div className="font-extrabold mb-2">Admin Content</div>
                       {listing.admin_content ? (
                         <>
-                          <ul className="list-none px-5">
+                          <ul className="list-none px-5 text-base md:text-lg">
                             {listing.admin_content.map((con: any) => (
-                              <li key={con.key}>
+                              <li key={con.key} className="mb-1">
                                 {con.key}: <strong>{con.value}</strong>
                               </li>
                             ))}
                           </ul>
-                          <hr className="mx-5" />
+                          <hr className="mx-0 md:mx-5 my-2" />
                         </>
                       ) : null}
-                      <div className="flex gap-5 px-5">
+                      <div className="flex flex-col md:flex-row gap-1 md:gap-5 px-0 md:px-5 mb-1 text-base md:text-lg">
                         Origin: <strong>{listing.origin}</strong>
                       </div>
-                      <hr className="mx-5" />
-                      <div className="flex gap-5 px-5">
-                        Source Link: <strong>{listing.source_link}</strong>
+                      <hr className="mx-0 md:mx-5 my-2" />
+                      <div className="flex flex-col md:flex-row gap-1 md:gap-5 px-0 md:px-5 text-base md:text-lg">
+                        Source Link: <strong className="break-words">{listing.source_link}</strong>
                       </div>
                     </div>
                   ) : null}
@@ -223,8 +249,7 @@ const ListingDetailPage = () => {
         <div className="flex justify-center">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
         </div>
-      )
-      }
+      )}
     </div >
   );
 };

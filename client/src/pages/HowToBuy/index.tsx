@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { IMAGES } from "@/constants";
 
 const HowToBuy = () => {
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ const HowToBuy = () => {
           HOW TO BUY A DENTAL PRACTICE
         </div>
         <img
-          src="src/assets/img/hero2.jpg"
+          src={IMAGES.HERO2}
           alt="Dental office sale"
           className="w-full h-[300px] object-cover rounded-2xl mt-6"
         />

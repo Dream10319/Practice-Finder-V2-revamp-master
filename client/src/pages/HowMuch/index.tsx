@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { IMAGES } from "@/constants";
 
 const HowMuch = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -83,7 +84,7 @@ const HowMuch = () => {
           HOW MUCH DO DENTAL OFFICES SELL FOR?
         </div>
         <img
-          src="src/assets/img/hero1.jpg"
+          src={IMAGES.HERO1}
           alt="Dental office sale"
           className="w-full h-[300px] object-cover rounded-2xl mt-6"
         />

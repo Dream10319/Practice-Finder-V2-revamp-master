@@ -30,6 +30,8 @@ import Dashboard from "@/assets/img/dashboard_icon.svg"
 import Listings from "@/assets/img/listings_icon.svg"
 import Logout from "@/assets/img/logout_icon.svg"
 import ArrowDown from "@/assets/img/arrow-down.gif"
+import Hero1 from "@/assets/img/hero1.jpg"
+import Hero2 from "@/assets/img/hero2.jpg"
 
 import { IMenuItem } from "@/types";
 
@@ -67,6 +69,8 @@ export const IMAGES = {
   CONNECT: Connect,
   SMALLMAP: SmallMap,
   ARROWDOWN: ArrowDown,
+  HERO1: Hero1,
+  HERO2: Hero2,
 };
 
 export const HOME_YOUTUBE_LINK = "https://youtu.be/G0hHc8rwgTw";

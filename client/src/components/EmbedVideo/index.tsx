@@ -1,3 +1,4 @@
+import { IMAGES } from "@/constants";
 import React from "react";
 
 const VideoEmbed: React.FC = () => {
@@ -7,7 +8,7 @@ const VideoEmbed: React.FC = () => {
       style={{ position: "relative", width: "100%" }}
     >
       <iframe
-        src="https://d1bkwqif2ae4kl.cloudfront.net/videos/static/player/index.html?videoId=yii7a2lctdfl6hw9o00g376v"
+        src={IMAGES.INTRO_VIDEO}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
         style={{

@@ -130,7 +130,7 @@ const HomePage: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="space-y-6">
               <h1 className="font-bold text-3xl sm:text-4xl lg:text-6xl leading-tight">
-                Find a Dental Practice For Sale with Practice MLS
+                Find a Dental Practice For Sale
               </h1>
 
               <RotatingTypewriter

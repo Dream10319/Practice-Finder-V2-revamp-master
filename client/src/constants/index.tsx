@@ -33,6 +33,7 @@ import ArrowDown from "@/assets/img/arrow-down.gif"
 import Hero1 from "@/assets/img/hero1.jpg"
 import Hero2 from "@/assets/img/hero2.jpg"
 import IntroVideo from "@/assets/video/Practice-MLS-Video.mp4"
+import Intro_Thumnail from "@/assets/img/Intro_Thumbnail.jpeg"
 
 import { IMenuItem } from "@/types";
 
@@ -72,7 +73,8 @@ export const IMAGES = {
   ARROWDOWN: ArrowDown,
   HERO1: Hero1,
   HERO2: Hero2,
-  INTRO_VIDEO: IntroVideo
+  INTRO_VIDEO: IntroVideo,
+  INTRO_VIDEO_THUMBNAIL: Intro_Thumnail
 };
 
 export const HOME_YOUTUBE_LINK = "https://youtu.be/G0hHc8rwgTw";

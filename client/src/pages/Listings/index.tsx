@@ -141,16 +141,16 @@ const ListingsPage = () => {
 
   // Helper to trigger the search
   const triggerSearch = (
-    newPage: number = 1, 
-    newLimit: number = limit, 
-    newState: string = stateFilter, 
+    newPage: number = 1,
+    newLimit: number = limit,
+    newState: string = stateFilter,
     newSearch: string = search,
     newOperatory: string = operatoryFilter,
     newType: string = typeFilter
   ) => {
-      // Always reset to page 1 for a new search/filter
-      setPage(newPage);
-      GetListings(newPage, newLimit, newState, newSearch, newOperatory, newType);
+    // Always reset to page 1 for a new search/filter
+    setPage(newPage);
+    GetListings(newPage, newLimit, newState, newSearch, newOperatory, newType);
   }
 
   // --- UPDATED GetListings FUNCTION ---
@@ -256,7 +256,7 @@ const ListingsPage = () => {
     GetListings(page, limit, stateFilter, search, operatoryFilter, typeFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit]);
-  
+
   /** useEffect for new filters (only run search on manual trigger) */
   // The logic for stateFilter, search, operatoryFilter, typeFilter will be
   // handled by an explicit search button or 'Enter' key press.
@@ -308,83 +308,83 @@ const ListingsPage = () => {
       </div>
 
       <hr className="my-2" />
-      
+
       {/* NEW FILTER SECTION */}
       <div className="flex flex-wrap gap-4 items-end mb-4 p-3 border border-gray-300 rounded-xl bg-gray-50">
         <div className="flex flex-col gap-1 w-full max-w-[200px] max-[640px]:max-w-none">
-            <label className="text-sm font-medium text-gray-700">State</label>
-            <input
-                className="block border border-gray-400 bg-white placeholder-gray-500 rounded-[10px] px-3 py-1 outline-none"
-                value={stateFilter}
-                onChange={(e) => setStateFilter(e.target.value)}
-                placeholder="e.g., Texas, Arizona"
-            />
+          <label className="text-sm font-medium text-gray-700">State</label>
+          <input
+            className="block border border-gray-400 bg-white placeholder-gray-500 rounded-[10px] px-3 py-1 outline-none"
+            value={stateFilter}
+            onChange={(e) => setStateFilter(e.target.value)}
+            placeholder="e.g., Texas, Arizona"
+          />
         </div>
 
         <div className="flex flex-col gap-1 w-full max-w-[150px] max-[640px]:max-w-none">
-            <label className="text-sm font-medium text-gray-700">Operatories</label>
-            <select
-                className="border border-gray-400 bg-white px-3 py-1 rounded-xl outline-none"
-                value={operatoryFilter}
-                onChange={(e) => setOperatoryFilter(e.target.value)}
-            >
-                <option value="">Any</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4+">4+</option>
-                {/* Add more options as needed */}
-            </select>
+          <label className="text-sm font-medium text-gray-700">Operatories</label>
+          <select
+            className="border border-gray-400 bg-white px-3 py-1 rounded-xl outline-none"
+            value={operatoryFilter}
+            onChange={(e) => setOperatoryFilter(e.target.value)}
+          >
+            <option value="">Any</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4+">4+</option>
+            {/* Add more options as needed */}
+          </select>
         </div>
 
         <div className="flex flex-col gap-1 w-full max-w-[200px] max-[640px]:max-w-none">
-            <label className="text-sm font-medium text-gray-700">Practice Type</label>
-            <select
-                className="border border-gray-400 bg-white px-3 py-1 rounded-xl outline-none"
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-            >
-                <option value="">Any</option>
-                <option value="General">General</option>
-                <option value="Specialty">Specialty</option>
-                <option value="Orthodontic">Orthodontic</option>
-                {/* Add more options based on your data */}
-            </select>
+          <label className="text-sm font-medium text-gray-700">Practice Type</label>
+          <select
+            className="border border-gray-400 bg-white px-3 py-1 rounded-xl outline-none"
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          >
+            <option value="">Any</option>
+            <option value="General">General</option>
+            <option value="Specialty">Specialty</option>
+            <option value="Orthodontic">Orthodontic</option>
+            {/* Add more options based on your data */}
+          </select>
         </div>
 
         {/* Existing General Search Box, now part of the filter group */}
         <div className="flex flex-col gap-1 flex-grow">
-            <label className="text-sm font-medium text-gray-700">Keyword Search</label>
-            <div className="relative">
-                <input
-                    className="w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-1 pr-9 max-md:text-sm outline-none"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") triggerSearch(1, limit, stateFilter, search, operatoryFilter, typeFilter);
-                    }}
-                    placeholder="Search by name, city, etc."
-                />
-                <MdSearch
-                    className="absolute top-1/2 mt-[-9px] right-3 text-[#8F8F8F] text-lg cursor-pointer hover:text-black"
-                    onClick={() => triggerSearch(1, limit, stateFilter, search, operatoryFilter, typeFilter)}
-                    title="Search"
-                />
-            </div>
+          <label className="text-sm font-medium text-gray-700">Keyword Search</label>
+          <div className="relative">
+            <input
+              className="w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-1 pr-9 max-md:text-sm outline-none"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") triggerSearch(1, limit, stateFilter, search, operatoryFilter, typeFilter);
+              }}
+              placeholder="Search by name, city, etc."
+            />
+            <MdSearch
+              className="absolute top-1/2 mt-[-9px] right-3 text-[#8F8F8F] text-lg cursor-pointer hover:text-black"
+              onClick={() => triggerSearch(1, limit, stateFilter, search, operatoryFilter, typeFilter)}
+              title="Search"
+            />
+          </div>
         </div>
 
         {/* Explicit Search/Apply Filters Button */}
         <button
-            className="bg-primary text-white font-bold px-4 py-1.5 rounded-xl transition-colors duration-150 hover:bg-primary-dark max-[640px]:w-full"
-            onClick={() => triggerSearch(1, limit, stateFilter, search, operatoryFilter, typeFilter)}
-            disabled={loading}
+          className="bg-primary text-white font-bold px-4 py-1.5 rounded-xl transition-colors duration-150 hover:bg-primary-dark max-[640px]:w-full"
+          onClick={() => triggerSearch(1, limit, stateFilter, search, operatoryFilter, typeFilter)}
+          disabled={loading}
         >
-            Apply Filters
+          Apply Filters
         </button>
 
       </div>
       {/* END NEW FILTER SECTION */}
-      
+
       <hr className="my-2" />
 
       <div className="flex justify-center mb-2 items-center">
@@ -405,6 +405,14 @@ const ListingsPage = () => {
           {!listings.length && <div className="text-center py-10 text-gray-600">No practices found matching your criteria.</div>}
         </div>
       )}
+
+      <hr className="mt-5" />
+
+      <div className="flex justify-center mb-15 items-center mt-2">
+        <div className="w-[500px]">
+          <ResponsivePagination current={page} total={totalPages} onPageChange={setPage} />
+        </div>
+      </div>
     </div>
   );
 };

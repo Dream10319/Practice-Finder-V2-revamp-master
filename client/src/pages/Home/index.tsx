@@ -186,7 +186,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* BADGE / STATEMENT */}
-      <section className="bg-[#D9D9D9] hidden md:block">
+      <section className="bg-[#D9D9D9] block">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <h2 className="text-center text-primary font-bold text-3xl lg:text-5xl max-w-5xl mx-auto">
             The #1 Site for Searching Dental Practices for Sale Online
@@ -202,6 +202,14 @@ const HomePage: React.FC = () => {
           </div>
         </section>
       ) : null}
+      <div className="md:hidden mt-8 flex justify-center">
+        <button
+          className="text-white bg-[#FF7575] rounded-xl text-sm font-bold leading-8 px-4 py-2 hover:opacity-80"
+          onClick={() => navigate("/signup")}
+        >
+          Get Started Now
+        </button>
+      </div>
       <div className="bg-[#F1F1F1] flex justify-center gap-10 py-15 max-md:hidden">
         <div className="w-[350px] bg-tertiary text-primary p-7 rounded-2xl flex flex-col gap-5">
           <h2 className="text-4xl text-center font-semibold">Number of Practices Listed</h2>
@@ -243,8 +251,8 @@ const HomePage: React.FC = () => {
 
       {/* ACCESS SECTION */}
       <section>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="grid lg:grid-cols-7 gap-10 lg:gap-14 items-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-20 text-center">
+          <div className="grid lg:grid-cols-7 lg:gap-14 items-center">
             <div className="lg:col-span-5 space-y-6">
               <h2 className="text-primary font-extrabold text-3xl md:text-5xl lg:text-6xl leading-tight">
                 Access To Multiple Practice Listings on One Site
@@ -258,25 +266,15 @@ const HomePage: React.FC = () => {
               <LazyLoadImage src={IMAGES.MAP} alt="Map" className="rounded-xl w-full h-auto object-cover" />
             </div>
           </div>
-
-          {/* Mobile CTA */}
-          <div className="md:hidden mt-8 flex justify-center">
-            <button
-              className="text-white bg-[#FF7575] rounded-xl text-sm font-bold leading-8 px-4 py-2 hover:opacity-80"
-              onClick={() => navigate("/signup")}
-            >
-              Get Started Now
-            </button>
-          </div>
         </div>
       </section>
 
       {/* TAKE CHARGE */}
       <section className="bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="grid lg:grid-cols-3 gap-10 lg:gap-14 items-start">
+        <div className="container mx-auto px-4 py-4 sm:px-6 lg:px-8 lg:py-20">
+          <div className="grid lg:grid-cols-3 lg:gap-14 items-start">
             <div className="space-y-4">
-              <h2 className="text-primary font-extrabold text-3xl md:text-5xl lg:text-6xl leading-tight">Take Charge.</h2>
+              <h2 className="text-primary font-extrabold text-3xl md:text-5xl lg:text-6xl leading-tight text-center">Take Charge.</h2>
               <h3 className="text-primary font-bold text-2xl md:text-3xl lg:text-4xl leading-snug">
                 Find the best dental office for sale... For you!
               </h3>

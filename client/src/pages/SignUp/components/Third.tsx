@@ -24,7 +24,6 @@ const SignUpThird: React.FC<SignUpProps> = ({
   password,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [isFinancing, setIsFinancing] = React.useState<any>("");
 
   const submit = async (event: any) => {
     try {
@@ -32,7 +31,6 @@ const SignUpThird: React.FC<SignUpProps> = ({
       const formData = new FormData(event.target);
       const phone = formData.get("phone") as string;
       const specialty = formData.get("specialty") as string;
-      const needFinancing = formData.get("needFinancing") as string;
 
       const response: any = await apis.signUp({
         password,
@@ -43,7 +41,6 @@ const SignUpThird: React.FC<SignUpProps> = ({
         uid: uid === "" ? null : uid,
         phone,
         specialty,
-        needFinancing: needFinancing === "Yes",
       });
 
       if (response.status) {
@@ -83,23 +80,6 @@ const SignUpThird: React.FC<SignUpProps> = ({
                 required
                 name="specialty"
               />
-              <select
-                className={`w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-2 max-md:text-sm outline-none h-[42px] ${
-                  isFinancing === "" ? "text-[#465860]" : "text-black"
-                }`}
-                onChange={(event: any) => {
-                  setIsFinancing(event.target.value);
-                }}
-                value={isFinancing}
-                required
-                name="needFinancing"
-              >
-                <option value={""} disabled>
-                  Need Financing Options?
-                </option>
-                <option value={"Yes"}>Yes</option>
-                <option value={"No"}>No</option>
-              </select>
             </div>
             <div className="text-[#878787]">
               I opt in to all Practice Finder’s communications, and agree to the{" "}
@@ -170,24 +150,7 @@ const SignUpThird: React.FC<SignUpProps> = ({
                 type="text"
                 required
                 name="specialty"
-              />
-              <select
-                className={`w-full block border border-primary bg-white placeholder-[#465860] rounded-[10px] px-3 py-2 max-md:text-sm outline-none h-[38px] ${
-                  isFinancing === "" ? "text-[#465860]" : "text-black"
-                }`}
-                onChange={(event: any) => {
-                  setIsFinancing(event.target.value);
-                }}
-                value={isFinancing}
-                required
-                name="needFinancing"
-              >
-                <option value={""} disabled>
-                  Need Financing Options?
-                </option>
-                <option value={"Yes"}>Yes</option>
-                <option value={"No"}>No</option>
-              </select>
+              />      
             </div>
             <div className="flex items-center gap-3 mt-2 justify-center">
               <input type="checkbox" className="w-[16px] h-[16px]" required />

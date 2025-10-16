@@ -4,16 +4,18 @@ import { IMenuItem } from "@/types";
 
 const MainFooter = () => {
   return (
-    <div className="bg-primary min-md:px-25 px-3 min-md:py-10 py-2">
-      <div className="flex max-md:flex-col min-md:justify-between items-center max-md:gap-2">
+    <div className="bg-primary min-md:px-25 px-3 min-md:py-10 py-4">
+      <div className="flex max-md:flex-col min-md:justify-between items-center max-md:gap-4 gap-8">
         <a href="/">
-        <LazyLoadImage
-          alt="logo"
-          className="min-lg:h-[50px] min-md:h-[50px] h-[40px]"
-          src={IMAGES.LOGO_BIG_WHITE}
-        />
+          <LazyLoadImage
+            alt="logo"
+            className="min-lg:h-[50px] min-md:h-[50px] h-[40px]"
+            src={IMAGES.LOGO_BIG_WHITE}
+          />
         </a>
-        <div className="flex justify-between items-center min-lg:gap-7 gap-3">
+
+        {/* ✅ Improved spacing & wrapping on mobile */}
+        <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 sm:gap-5 md:gap-7 mt-2 md:mt-0">
           {FOOTER_MENU_ITEMS.map((item: IMenuItem) => (
             <a
               href={`/${item.key}`}
@@ -25,7 +27,8 @@ const MainFooter = () => {
           ))}
         </div>
       </div>
-      <div className="flex min-sm:justify-end justify-center min-sm:text-2xl text-sm text-[#465860] min-md:mt-5 mt-2">
+
+      <div className="flex min-sm:justify-end justify-center min-sm:text-2xl text-sm text-[#465860] min-md:mt-5 mt-3 text-center">
         All rights reserved &#169; Practice MLS {new Date().getFullYear()}
       </div>
     </div>

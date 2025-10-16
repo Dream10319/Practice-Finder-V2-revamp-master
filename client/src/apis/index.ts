@@ -72,6 +72,9 @@ const getStateDescription = (data: any) =>
   API.post(`/api/v1/practice/state-description`, data);
 const getListingImages = (state: string) => API.get(`/api/v1/practice/${state}/listing-images`);
 
+const requestInterest = (data: any) => 
+  API.post("/api/v1/email/request-interest", data);
+
 // User
 const getUserList = () => API.get("/api/v1/user/list");
 const activateUserById = (id: string) => API.get(`/api/v1/user/${id}/activate`);
@@ -105,6 +108,7 @@ export const apis = {
   getTotalPracticeCount,
   getStateDescription,
   getListingImages,
+  requestInterest,
 
   getUserList,
   activateUserById,

@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { apis } from "@/apis";
+import { apis } from "@/apis"; // <-- This is where 'requestInterest' lives now
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { IMAGES } from "@/constants";
@@ -16,6 +16,29 @@ const ListingDetailPage = () => {
   const [loading, setLoading] = React.useState(false);
   const [likeListings, setLikeListings] = React.useState<Array<any>>([]);
   const [backHover, setBackHover] = React.useState(false);
+
+  const [interestOptions, setInterestOptions] = React.useState({
+    lending: false,
+    valuation: false,
+    broker: false,
+    lawyer: false,
+  });
+
+  type InterestOptions = {
+    lending: boolean;
+    valuation: boolean;
+    broker: boolean;
+    lawyer: boolean;
+  };
+
+  const buildChoicesText = (opts: InterestOptions): string[] => {
+    const lines: string[] = [];
+    if (opts.lending) lines.push("Yes, I want to be connected to Dental Practice Lending options");
+    if (opts.valuation) lines.push("Yes, I want to be connected to a Buyer’s Rep for a 3rd Party valuation");
+    if (opts.broker) lines.push("Yes, I want to be connected to the Practice Broker holding this listing");
+    if (opts.lawyer) lines.push("Yes, I want to be connected to a Dental Lawyer for legal assistance");
+    return lines;
+  };
 
   const { authUser } = useSelector((state: RootState) => state.auth);
 
@@ -55,6 +78,72 @@ const ListingDetailPage = () => {
     }
   };
 
+  const handleInterestChange = (field: keyof typeof interestOptions) => {
+    setInterestOptions((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handleRequest = async () => {
+    const chosen = buildChoicesText(interestOptions);
+    if (!chosen.length) {
+      enqueueSnackbar({ variant: "error", message: "Please select at least one option." });
+      return;
+    }
+
+    // Compose user info from authUser; fallback to empty strings
+    const user = {
+      firstName: authUser?.firstName ?? "",
+      lastName: authUser?.lastName ?? "",
+      email: authUser?.email ?? "",
+      phone: authUser?.phone ?? "",
+    };
+
+    // Practice info (id is mandatory via useParams, name and url from fetched listing)
+    const practice = {
+      id: listing?.id ?? id,
+      name: listing?.name ?? "Practice",
+      // Using window.location.origin for robustness in frontend URL creation
+      url: listing?.source_link ?? `${window.location.origin}/listings/${id}`,
+    };
+
+    const payload = {
+      user,
+      practice,
+      choices: chosen,
+      // optionally include authUser id if available
+      userId: authUser?.id ?? null,
+    };
+
+    try {
+      setLoading(true);
+      
+      // ----------------------------------------------------------------------
+      // NEW: Use the registered apis.requestInterest instead of raw fetch
+      // This ensures the Bearer token and base URL are handled correctly.
+      const response: any = await apis.requestInterest(payload);
+
+      if (response.status) {
+        enqueueSnackbar({ variant: "success", message: "Request submitted — we'll contact you shortly." });
+        // Clear the checkboxes on success
+        setInterestOptions({ lending: false, valuation: false, broker: false, lawyer: false });
+      } else {
+        // Since apis.requestInterest is using axios, non-200 status errors
+        // should be caught in the catch block (if you follow standard axios practice)
+        // but we keep this check for safety against 200/false responses.
+        enqueueSnackbar({ variant: "error", message: response?.message ?? "Server error while submitting request." });
+      }
+      // ----------------------------------------------------------------------
+    } catch (err: any) {
+      console.error("handleRequest error:", err);
+      // Axios error handling: err.response.data.message comes from the interceptor
+      enqueueSnackbar({ 
+        variant: "error", 
+        message: err?.response?.data?.message ?? err.message ?? "Network error" 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
     if (id) {
       GetLikedListings();
@@ -70,9 +159,9 @@ const ListingDetailPage = () => {
     <div className="grid grid-cols-[20px_1fr] md:grid-cols-[20px_12px_180px_1fr] items-center gap-1 border-b border-b-[#8F8F8F] py-2">
       <img src={icon} alt={label} className="w-5 h-5" />
       <div className="hidden md:block" />
-      
+
       {/* Mobile view uses flex to keep key/value on one line */}
-      <div className="flex justify-between w-full md:contents"> 
+      <div className="flex justify-between w-full md:contents">
         <span className="whitespace-nowrap font-semibold md:col-span-1">
           {label}:
         </span>
@@ -82,7 +171,7 @@ const ListingDetailPage = () => {
       </div>
     </div>
   );
-  
+
   // Description field: Content wraps to a new line on mobile.
   const DescriptionRow = ({ icon, label, details, content }: { icon: string, label: string, details: any, content: any }) => (
     // Mobile: Icon (20px) | Label (1fr) in the first row. Content starts on a new line.
@@ -240,6 +329,72 @@ const ListingDetailPage = () => {
                       </div>
                     </div>
                   ) : null}
+
+                  <div className="mt-8 rounded-md py-12 px-6 text-center">
+                    <h2 className="text-3xl md:text-4xl font-extrabold mb-2">Interested in this practice?</h2>
+                    <p className="text-2xl text-green-600 font-semibold mb-6">Here is how we can help:</p>
+
+                    <div className="max-w-3xl mx-auto text-left space-y-6">
+                      <label className="flex items-start gap-4">
+                        <input
+                          type="checkbox"
+                          checked={interestOptions.lending}
+                          onChange={() => handleInterestChange("lending")}
+                          className="mt-1"
+                          aria-label="Connect to Dental Practice Lending options"
+                        />
+                        <span className="text-lg md:text-xl">Yes, I want to be connected to **Dental Practice Lending options**</span>
+                      </label>
+
+                      <label className="flex items-start gap-4">
+                        <input
+                          type="checkbox"
+                          checked={interestOptions.valuation}
+                          onChange={() => handleInterestChange("valuation")}
+                          className="mt-1"
+                          aria-label="Connect to a Buyer's Rep for valuation"
+                        />
+                        <span className="text-lg md:text-xl">Yes, I want to be connected to a **Buyer's Rep for a 3rd party valuation**</span>
+                      </label>
+
+                      <label className="flex items-start gap-4">
+                        <input
+                          type="checkbox"
+                          checked={interestOptions.broker}
+                          onChange={() => handleInterestChange("broker")}
+                          className="mt-1"
+                          aria-label="Connect to the Practice Broker holding this listing"
+                        />
+                        <span className="text-lg md:text-xl">Yes, I want to be connected to the **Practice Broker holding this listing**</span>
+                      </label>
+
+                      <label className="flex items-start gap-4">
+                        <input
+                          type="checkbox"
+                          checked={interestOptions.lawyer}
+                          onChange={() => handleInterestChange("lawyer")}
+                          className="mt-1"
+                          aria-label="Connect to a Dental Lawyer for legal assistance"
+                        />
+                        <span className="text-lg md:text-xl">Yes, I want to be connected to a **Dental Lawyer for legal assistance**</span>
+                      </label>
+
+                      <div className="flex justify-center mt-8">
+                        <button
+                          onClick={handleRequest}
+                          disabled={loading} // Disable button while loading/request is in progress
+                          className="px-8 py-3 rounded-full bg-green-500 text-white font-bold shadow hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-green-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                          aria-label="Request"
+                        >
+                          {loading ? (
+                            <AiOutlineLoading3Quarters className="animate-spin text-xl mx-auto" />
+                          ) : (
+                            "REQUEST"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

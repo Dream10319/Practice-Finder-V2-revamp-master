@@ -9,6 +9,7 @@ import AuthRouter from "@routes/AuthRoute";
 import PracticeRouter from "@routes/PracticeRoute";
 import PublicRouter from "@routes/PublicRoute";
 import UserRouter from "@routes/UserRoute";
+import RequestRouter from "@routes/requestInterest"
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/practice", PracticeRouter);
 app.use("/api/v1/public", PublicRouter);
 app.use("/api/v1/user", UserRouter);
+app.use("/api/v1/email", RequestRouter)
 
 const server = http.createServer(app);
 

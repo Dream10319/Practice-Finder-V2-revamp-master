@@ -9,7 +9,7 @@ import AuthRouter from "@routes/AuthRoute";
 import PracticeRouter from "@routes/PracticeRoute";
 import PublicRouter from "@routes/PublicRoute";
 import UserRouter from "@routes/UserRoute";
-import RequestRouter from "@routes/requestInterest"
+import RequestRouter from "@routes/RequestInterest"
 
 dotenv.config();
 
